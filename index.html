@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en" style="scroll-behavior: smooth;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VAPT Zero to Hero | SAMCOMMUNITY Cybersecurity Training</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Load Custom Fonts (Rajdhani for titles, Inter for body) -->
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom Tailwind Configuration */
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'neon-green': '#39FF14',
+                        'dark-bg': '#0A0A0A',
+                        'dark-card': '#1C1C1C',
+                        'accent-blue': '#00A8FF',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Rajdhani', 'sans-serif'],
+                    },
+                }
+            }
+        }
+        /* Global Styles */
+        body {
+            background-color: #0A0A0A;
+            color: #E5E7EB;
+            font-family: 'Inter', sans-serif;
+            /* Padding for the fixed bottom banner to 80px */
+            padding-bottom: 80px;
+        }
+        .section-title {
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: 2.5rem;
+            color: #E5E7EB;
+            text-shadow: 0 0 10px rgba(57, 255, 20, 0.4);
+            border-bottom: 3px solid #39FF14;
+            display: inline-block;
+            padding-bottom: 5px;
+            margin-bottom: 2rem;
+        }
+        
+        /* Custom Button Styling */
+        .cta-button {
+            transition: all 0.3s ease;
+            /* Base Shadow/Glow effect for Neon Green buttons */
+            box-shadow: 0 0 10px rgba(57, 255, 20, 0.5), inset 0 0 5px rgba(57, 255, 20, 0.3);
+            border: 2px solid #2ECC40; /* Subtle Darker Green Border */
+        }
+        .cta-button:hover {
+            transform: translateY(-2px); /* Slight lift */
+            box-shadow: 0 5px 20px rgba(57, 255, 20, 0.8), inset 0 0 10px rgba(57, 255, 20, 0.5); /* Enhanced Glow */
+            /* Using a darker green on hover to maintain contrast with white text */
+            background-color: #2ECC40; 
+        }
+
+        .secondary-button {
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(0, 168, 255, 0.5); /* Blue glow */
+            border: 2px solid #0056b3; /* Darker blue border */
+        }
+        .secondary-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 168, 255, 0.8);
+            background-color: #0084cc;
+        }
+
+        /* FAQ Styling */
+        .faq-question {
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .faq-question:hover {
+            background-color: #2c2c2c;
+        }
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out;
+            padding: 0 1.5rem;
+        }
+        .faq-answer.open {
+            max-height: 500px; 
+            padding: 1rem 1.5rem 1.5rem 1.5rem;
+        }
+        /* Custom animation for modal */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header & Navigation Menu (Guaranteed Solid Background) -->
+    <header class="bg-dark-bg border-b border-neon-green/30 sticky top-0 z-50" style="background-color: #0A0A0A !important;">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <!-- Logo -->
+            <a href="#hero" class="text-3xl font-heading font-bold text-white">
+                <span class="text-accent-blue">SAM</span><span class="text-neon-green">COMMUNITY</span>
+            </a>
+            
+            <!-- Desktop Navigation -->
+            <nav class="hidden md:flex space-x-8 items-center">
+                <a href="#urgency" class="text-gray-300 hover:text-neon-green transition duration-200 font-medium">Why Now?</a>
+                <a href="#modules" class="text-gray-300 hover:text-neon-green transition duration-200 font-medium">Curriculum</a>
+                <a href="#career" class="text-gray-300 hover:text-neon-green transition duration-200 font-medium">Career Path</a>
+                <a href="#faq" class="text-gray-300 hover:text-neon-green transition duration-200 font-medium">FAQ</a>
+                <!-- Button 1: Enroll Now (Text color changed to WHITE) -->
+                <a href="#enroll" class="cta-button bg-neon-green text-white font-bold py-2 px-6 rounded-md transition duration-300 ml-4">
+                    Enroll Now
+                </a>
+            </nav>
+
+            <!-- Mobile Menu Button (Hamburger) -->
+            <button id="mobile-menu-button" class="md:hidden text-white text-2xl focus:outline-none">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu Overlay (Guaranteed Solid Background) -->
+        <div id="mobile-menu" class="hidden md:hidden absolute top-full left-0 w-full bg-dark-bg border-t border-neon-green/30 shadow-lg pb-4" style="background-color: #0A0A0A !important;">
+            <a href="#urgency" class="block py-2 px-4 text-gray-300 hover:bg-gray-800 transition duration-200">Why Now?</a>
+            <a href="#modules" class="block py-2 px-4 text-gray-300 hover:bg-gray-800 transition duration-200">Curriculum</a>
+            <a href="#career" class="block py-2 px-4 text-gray-300 hover:bg-gray-800 transition duration-200">Career Path</a>
+            <a href="#faq" class="block py-2 px-4 text-gray-300 hover:bg-gray-800 transition duration-200">FAQ</a>
+            <!-- Button 2: Enroll Now (Mobile) (Text color changed to WHITE) -->
+            <a href="#enroll" class="block text-center mt-4 mx-4 py-2 px-4 cta-button bg-neon-green text-white font-bold rounded-md">Enroll Now</a>
+        </div>
+    </header>
+
+    <main>
+        <!-- 1. HERO BANNER -->
+        <section id="hero" class="py-20 md:py-32 relative overflow-hidden">
+            <!-- Background Matrix Effect (CSS only for minimal overhead) -->
+            <div class="absolute inset-0 bg-dark-bg opacity-20 z-0"></div>
+            <div class="container mx-auto px-4 relative z-10 text-center">
+                <p class="text-accent-blue font-heading text-2xl mb-4 uppercase">
+                    Zero to Hero in Offensive Security by SAMCOMMUNITY
+                </p>
+                <h1 class="text-6xl md:text-8xl font-heading font-extrabold text-white leading-tight mb-6">
+                    MASTER VAPT. <br class="hidden md:inline-block">
+                    <span class="text-neon-green">GET HIRED.</span>
+                </h1>
+                <p class="text-xl md:text-2xl text-gray-400 max-w-3xl mx-auto mb-10">
+                    The ultimate job-oriented training program to master Vulnerability Assessment & Penetration Testing across Web, Cloud, Mobile, and AI systems.
+                </p>
+                <!-- Button 3: Start Your Hacking Career Today (Text color changed to WHITE) -->
+                <a href="#enroll" class="cta-button bg-neon-green text-white font-bold text-lg py-4 px-12 rounded-lg inline-block">
+                    Start Your Hacking Career Today
+                </a>
+            </div>
+        </section>
+
+        <!-- 2. THE PROBLEM/URGENCY (SLIDE 4 STATS) -->
+        <section id="urgency" class="py-16 bg-dark-card border-y border-neon-green/20">
+            <div class="container mx-auto px-4">
+                <h2 class="section-title mx-auto text-center">THE THREAT IS REAL. THE OPPORTUNITY IS NOW.</h2>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mt-10 text-center">
+                    <!-- Stat 1 -->
+                    <div class="p-6 bg-gray-900 rounded-xl border border-red-500/50 shadow-lg shadow-red-500/20">
+                        <p class="text-6xl font-heading font-bold text-red-500">39s</p>
+                        <p class="text-lg text-gray-300 mt-2">Frequency of a Cyber Attack</p>
+                    </div>
+                    <!-- Stat 2 -->
+                    <div class="p-6 bg-gray-900 rounded-xl border border-red-500/50 shadow-lg shadow-red-500/20">
+                        <p class="text-6xl font-heading font-bold text-red-500">300%</p>
+                        <p class="text-lg text-gray-300 mt-2">Surge in Ransomware</p>
+                    </div>
+                    <!-- Stat 3 -->
+                    <div class="p-6 bg-gray-900 rounded-xl border border-neon-green/50 shadow-lg shadow-neon-green/20">
+                        <p class="text-6xl font-heading font-bold text-neon-green">3.5M+</p>
+                        <p class="text-lg text-gray-300 mt-2">Unfilled Cyber Jobs Globally</p>
+                    </div>
+                    <!-- Stat 4 -->
+                    <div class="p-6 bg-gray-900 rounded-xl border border-neon-green/50 shadow-lg shadow-neon-green/20">
+                        <p class="text-6xl font-heading font-bold text-neon-green">$10.5T</p>
+                        <p class="text-lg text-gray-300 mt-2">Projected Annual Cybercrime Cost</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. ADVANCED MODULES (SLIDE 7) -->
+        <!-- Reduced bottom padding to decrease gap before career section -->
+        <section id="modules" class="pt-20 pb-10">
+            <div class="container mx-auto px-4">
+                <h2 class="section-title mx-auto text-center">BEYOND WEB: MASTERING SPECIALIZED VAPT</h2>
+                <p class="text-center text-gray-400 mb-12 max-w-4xl mx-auto">
+                    Traditional VAPT is not enough. Our curriculum covers the high-demand, high-salary domains that employers are actively seeking.
+                </p>
+
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+                    <!-- Module 1: Cloud -->
+                    <div class="text-center p-4 bg-dark-card rounded-xl border border-accent-blue/50 hover:bg-gray-800 transition duration-300">
+                        <i class="fa-solid fa-cloud text-4xl text-accent-blue mb-3"></i>
+                        <p class="font-heading font-semibold text-white">Cloud Security</p>
+                        <p class="text-sm text-gray-400">(AWS, GCP, Azure)</p>
+                    </div>
+                    <!-- Module 2: Mobile -->
+                    <div class="text-center p-4 bg-dark-card rounded-xl border border-accent-blue/50 hover:bg-gray-800 transition duration-300">
+                        <i class="fa-solid fa-mobile-screen-button text-4xl text-accent-blue mb-3"></i>
+                        <p class="font-heading font-semibold text-white">Mobile App Security</p>
+                        <p class="text-sm text-gray-400">(Android & iOS)</p>
+                    </div>
+                    <!-- Module 3: API -->
+                    <div class="text-center p-4 bg-dark-card rounded-xl border border-accent-blue/50 hover:bg-gray-800 transition duration-300">
+                        <i class="fa-solid fa-server text-4xl text-accent-blue mb-3"></i>
+                        <p class="font-heading font-semibold text-white">API Security</p>
+                        <p class="text-sm text-gray-400">(REST, GraphQL)</p>
+                    </div>
+                    <!-- Module 4: Source Code -->
+                    <div class="text-center p-4 bg-dark-card rounded-xl border border-accent-blue/50 hover:bg-gray-800 transition duration-300">
+                        <i class="fa-solid fa-code text-4xl text-accent-blue mb-3"></i>
+                        <p class="font-heading font-semibold text-white">Source Code Analysis</p>
+                        <p class="text-sm text-gray-400">(SAST/DAST)</p>
+                    </div>
+                    <!-- Module 5: Container -->
+                    <div class="text-center p-4 bg-dark-card rounded-xl border border-accent-blue/50 hover:bg-gray-800 transition duration-300">
+                        <i class="fa-solid fa-box-open text-4xl text-accent-blue mb-3"></i>
+                        <p class="font-heading font-semibold text-white">Containerization</p>
+                        <p class="text-sm text-gray-400">(Docker, K8s)</p>
+                    </div>
+                    <!-- Module 6: Frameworks -->
+                    <div class="text-center p-4 bg-dark-card rounded-xl border border-accent-blue/50 hover:bg-gray-800 transition duration-300">
+                        <i class="fa-solid fa-scroll text-4xl text-accent-blue mb-3"></i>
+                        <p class="font-heading font-semibold text-white">Standards & Compliance</p>
+                        <p class="text-sm text-gray-400">(NIST, ISO, PCI)</p>
+                    </div>
+                </div>
+                
+                <!-- Syllabus Download CTA -->
+                <div class="text-center mt-12">
+                    <!-- Button 4: Download Full Syllabus PDF (Secondary Style, already white text) -->
+                    <button id="download-syllabus-btn" class="secondary-button bg-accent-blue text-white font-bold text-xl py-4 px-12 rounded-lg inline-block hover:bg-blue-700">
+                        <i class="fa-solid fa-download mr-2"></i> Download Full Syllabus PDF
+                    </button>
+                </div>
+                
+            </div>
+        </section>
+
+        <!-- 5. CAREER ACCELERATION (SLIDE 6 & 11) -->
+        <!-- Reduced top padding to bring section closer to syllabus button -->
+        <section id="career" class="pt-10 pb-20">
+            <div class="container mx-auto px-4">
+                <h2 class="section-title mx-auto text-center">THE ACCELERATED CAREER PATH</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-10 mt-10">
+                    <!-- Column 1: Salary -->
+                    <div class="bg-dark-card p-8 rounded-xl border border-neon-green/20">
+                        <h3 class="text-3xl font-heading text-neon-green mb-4 flex items-center"><i class="fa-solid fa-money-bill-trend-up mr-3"></i> Earning Potential</h3>
+                        <p class="text-gray-400 mb-6">Cybersecurity offers one of the fastest routes to high income.</p>
+                        <ul class="space-y-4">
+                            <li class="border-l-4 border-gray-500 pl-4">
+                                <span class="font-heading text-2xl text-gray-300">Foundation (0-1 Yrs)</span>
+                                <p class="text-3xl font-bold text-gray-500">₹3L - ₹6L</p>
+                            </li>
+                            <li class="border-l-4 border-yellow-500 pl-4">
+                                <span class="font-heading text-2xl text-yellow-500">Mid-Level (2-4 Yrs)</span>
+                                <p class="text-3xl font-bold text-yellow-500">₹8L - ₹14L</p>
+                            </li>
+                            <li class="border-l-4 border-neon-green pl-4">
+                                <span class="font-heading text-2xl text-neon-green">Expert (5+ Yrs)</span>
+                                <p class="text-3xl font-bold text-neon-green">₹15L+</p>
+                            </li">
+                        </ul>
+                    </div>
+
+                    <!-- Column 2: Job Prep (SLIDE 11) -->
+                    <div class="lg:col-span-2 bg-dark-card p-8 rounded-xl border border-neon-green/20">
+                        <h3 class="text-3xl font-heading text-neon-green mb-6 flex items-center"><i class="fa-solid fa-briefcase mr-3"></i> Career Readiness</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div class="p-4 bg-gray-900 rounded-lg">
+                                <i class="fa-solid fa-file-contract text-accent-blue mr-2"></i>
+                                <span class="font-semibold text-white">Job-Optimized Resume:</span> Tailored to pass HR filters.
+                            </div>
+                            <div class="p-4 bg-gray-900 rounded-lg">
+                                <i class="fa-solid fa-code-fork text-accent-blue mr-2"></i>
+                                <span class="font-semibold text-white">Hands-on Projects:</span> Build a portfolio of real VAPT reports.
+                            </div>
+                            <div class="p-4 bg-gray-900 rounded-lg">
+                                <i class="fa-solid fa-handshake-simple text-accent-blue mr-2"></i>
+                                <span class="font-semibold text-white">Mock Interviews:</span> Scenario-based preparation for technical rounds.
+                            </div>
+                            <div class="p-4 bg-gray-900 rounded-lg">
+                                <i class="fa-brands fa-linkedin text-accent-blue mr-2"></i>
+                                <span class="font-semibold text-white">Personal Branding:</span> Leveraging LinkedIn for job visibility.
+                            </div>
+                        </div>
+                        <div class="mt-8 text-center">
+                            <p class="text-2xl font-heading text-white">
+                                The only VAPT course that guarantees **Job Readiness.**
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. FINAL CTA (Moved to follow Career) -->
+        <section id="enroll" class="py-20 bg-accent-blue/10 border-t border-b border-accent-blue/50">
+            <div class="container mx-auto px-4 text-center">
+                <h2 class="text-5xl font-heading font-bold text-white mb-4">
+                    STOP WATCHING. START HACKING.
+                </h2>
+                <p class="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
+                    Limited spots available for the next cohort. Secure your position and transition into a high-paying, high-demand cybersecurity role.
+                </p>
+                <!-- Button 5: Apply for the Next Batch (Text color changed to WHITE) -->
+                <a href="#enroll" class="cta-button bg-neon-green text-white font-bold text-2xl py-5 px-16 rounded-lg inline-block">
+                    Apply for the Next Batch
+                </a>
+            </div>
+        </section>
+        
+        <!-- 7. FAQs Section (Moved to last) -->
+        <section id="faq" class="py-20 bg-dark-card border-t border-neon-green/30">
+            <div class="container mx-auto px-4">
+                <h2 class="section-title mx-auto text-center">FREQUENTLY ASKED QUESTIONS</h2>
+                <div class="max-w-3xl mx-auto mt-10 space-y-4">
+                    
+                    <!-- FAQ Item 1 -->
+                    <div class="bg-gray-900 rounded-lg border border-gray-700 overflow-hidden">
+                        <div class="faq-question flex justify-between items-center p-6 text-xl font-semibold text-white" onclick="toggleFaq(this)">
+                            Who is this VAPT course designed for?
+                            <i class="fa-solid fa-chevron-down text-neon-green transition-transform duration-300"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p class="text-gray-400">
+                                This course is ideal for beginners with basic IT/networking knowledge, graduates looking to enter cybersecurity, and IT professionals (DevOps, System Admins) seeking to specialize in offensive security and VAPT roles. No prior hacking experience is required.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 2 -->
+                    <div class="bg-gray-900 rounded-lg border border-gray-700 overflow-hidden">
+                        <div class="faq-question flex justify-between items-center p-6 text-xl font-semibold text-white" onclick="toggleFaq(this)">
+                            What is the typical duration of the program?
+                            <i class="fa-solid fa-chevron-down text-neon-green transition-transform duration-300"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p class="text-gray-400">
+                                The **SAMCOMMUNITY** VAPT to Hero program typically spans 6 months of intensive, project-based training, including live sessions, lab time, and dedicated career preparation modules.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 3 -->
+                    <div class="bg-gray-900 rounded-lg border border-gray-700 overflow-hidden">
+                        <div class="faq-question flex justify-between items-center p-6 text-xl font-semibold text-white" onclick="toggleFaq(this)">
+                            Do you provide job placement assistance?
+                            <i class="fa-solid fa-chevron-down text-neon-green transition-transform duration-300"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p class="text-gray-400">
+                                Yes. Our Professional batch includes dedicated job placement assistance, which covers resume building, LinkedIn optimization, mock interviews, and direct referrals to our network of partner cybersecurity firms. We prioritize job readiness for all our graduates.
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer (Cooler Design) -->
+    <footer class="bg-dark-bg border-t border-neon-green/30 pt-12 pb-8">
+        <div class="container mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-8 text-gray-400">
+            <!-- Col 1: Logo & Mission -->
+            <div class="col-span-2 md:col-span-1">
+                <a href="#hero" class="text-3xl font-heading font-bold text-white">
+                    <span class="text-accent-blue">SAM</span><span class="text-neon-green">COMMUNITY</span>
+                </a>
+                <p class="text-sm mt-4 max-w-xs">
+                    Building the next generation of offensive security experts through job-focused, specialized VAPT training.
+                </p>
+            </div>
+
+            <!-- Col 2: Program Links -->
+            <div>
+                <h3 class="text-lg font-heading font-semibold text-neon-green mb-3">Program</h3>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#modules" class="hover:text-white transition">Curriculum</a></li>
+                    <li><a href="#career" class="hover:text-white transition">Career Outcomes</a></li>
+                </ul>
+            </div>
+
+            <!-- Col 3: Company -->
+            <div>
+                <h3 class="text-lg font-heading font-semibold text-neon-green mb-3">SAMCOMMUNITY</h3>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#" class="hover:text-white transition">About Us</a></li>
+                    <li><a href="#" class="hover:text-white transition">Contact Support</a></li>
+                    <li><a href="#faq" class="hover:text-white transition">FAQ Center</a></li>
+                </ul>
+            </div>
+
+            <!-- Col 4: Legal & Social -->
+            <div>
+                <h3 class="text-lg font-heading font-semibold text-neon-green mb-3">Connect</h3>
+                <div class="flex space-x-4 text-2xl">
+                    <a href="#" target="_blank" class="hover:text-white transition"><i class="fa-brands fa-linkedin"></i></a>
+                    <a href="#" target="_blank" class="hover:text-white transition"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="#" target="_blank" class="hover:text-white transition"><i class="fa-brands fa-youtube"></i></a>
+                </div>
+                <p class="text-xs mt-6">&copy; 2024 SAMCOMMUNITY. All rights reserved.</p>
+                <p class="text-xs mt-1"><a href="#" class="hover:text-white">Privacy Policy</a> | <a href="#" class="hover:text-white">Terms of Use</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Fixed Enrollment Banner (Guaranteed Solid Background, Max Z-Index, and Mobile Visibility) -->
+    <div id="fixed-cta-banner" class="fixed bottom-0 left-0 right-0 bg-dark-bg text-neon-green py-4 z-[999] shadow-inner shadow-neon-green/50 border-t-4 border-neon-green" style="background-color: #0A0A0A !important;">
+        <div class="container mx-auto flex items-center justify-between font-heading font-bold px-4">
+            <!-- Simplified text to ensure it always fits and shows on mobile -->
+            <p class="text-base sm:text-lg">
+                🚀 Enrollment Open! Secure Your Spot Now.
+            </p>
+            <!-- Button 6: Enroll Today (Fixed Banner) (Text color changed to WHITE) -->
+            <a href="#enroll" class="cta-button bg-neon-green text-white transition duration-300 py-2 px-4 text-sm sm:text-base rounded-full">
+                Enroll Today <i class="fa-solid fa-bolt ml-1"></i>
+            </a>
+        </div>
+    </div>
+    
+    <!-- Syllabus Download Modal (Guaranteed Solid Background Overlay) -->
+    <div id="syllabus-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4" style="background-color: #0A0A0A !important;">
+        <div class="bg-dark-card p-8 md:p-10 rounded-xl max-w-lg w-full border-2 border-neon-green/50 shadow-2xl shadow-neon-green/20 relative animate-fade-in">
+            <!-- Close Button -->
+            <button id="close-modal-btn" class="absolute top-4 right-4 text-gray-400 hover:text-neon-green transition">
+                <i class="fa-solid fa-xmark text-2xl"></i>
+            </button>
+
+            <h3 class="text-3xl font-heading font-bold text-neon-green mb-2">Get Your Syllabus</h3>
+            <p class="text-gray-400 mb-6">Enter your details to instantly download the VAPT Zero to Hero course curriculum PDF.</p>
+
+            <form id="syllabus-form" onsubmit="handleSyllabusDownload(event)">
+                <!-- Name Input -->
+                <div class="mb-4">
+                    <label for="name" class="block text-sm font-medium text-gray-300 mb-1">Full Name</label>
+                    <!-- Improved Input Styling -->
+                    <input type="text" id="name" name="name" required
+                        class="w-full p-3 bg-gray-900 border border-gray-700 rounded-md text-white 
+                        focus:border-neon-green focus:ring-2 focus:ring-neon-green/50 outline-none transition">
+                </div>
+
+                <!-- Email Input -->
+                <div class="mb-4">
+                    <label for="email" class="block text-sm font-medium text-gray-300 mb-1">Email Address</label>
+                    <!-- Improved Input Styling -->
+                    <input type="email" id="email" name="email" required
+                        class="w-full p-3 bg-gray-900 border border-gray-700 rounded-md text-white 
+                        focus:border-neon-green focus:ring-2 focus:ring-neon-green/50 outline-none transition">
+                </div>
+
+                <!-- Mobile Number Input -->
+                <div class="mb-6">
+                    <label for="mobile" class="block text-sm font-medium text-gray-300 mb-1">Mobile Number</label>
+                    <!-- Improved Input Styling -->
+                    <input type="tel" id="mobile" name="mobile" required
+                        pattern="[0-9]{10,15}" title="Enter a valid mobile number (10-15 digits)"
+                        class="w-full p-3 bg-gray-900 border border-gray-700 rounded-md text-white 
+                        focus:border-neon-green focus:ring-2 focus:ring-neon-green/50 outline-none transition">
+                </div>
+
+                <!-- Button 7: Submit & Download PDF (Primary CTA Style) (Text color changed to WHITE) -->
+                <button type="submit" id="form-submit-btn" 
+                        class="w-full cta-button bg-neon-green text-white font-bold text-lg py-3 rounded-md">
+                    <i class="fa-solid fa-download mr-2"></i> Submit & Download PDF
+                </button>
+            </form>
+            
+            <!-- Success Message Area (initially hidden) -->
+            <div id="success-message" class="hidden text-center mt-6">
+                <i class="fa-solid fa-circle-check text-5xl text-neon-green mb-3 animate-pulse"></i>
+                <p class="text-xl font-heading text-white">Download Initiated!</p>
+                <p class="text-gray-400 mt-2">The syllabus PDF download should start shortly. Check your email for a direct link.</p>
+                <a id="direct-download-link" href="#" download="VAPT_Syllabus_SAMCOMMUNITY.pdf" class="mt-4 inline-block text-accent-blue hover:text-white transition underline">
+                    Click here if download doesn't start.
+                </a>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- JavaScript for Mobile Menu and FAQ Accordion -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Smooth Scroll Functionality (Applied to all internal links)
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    document.querySelector(targetId).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+
+                    // Close mobile menu after clicking a link
+                    const mobileMenu = document.getElementById('mobile-menu');
+                    if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
+                         mobileMenu.classList.add('hidden');
+                         document.getElementById('mobile-menu-button').querySelector('i').className = 'fa-solid fa-bars';
+                    }
+                });
+            });
+
+            // 2. Mobile Menu Toggle
+            const menuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            if (menuButton && mobileMenu) {
+                menuButton.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                    const icon = menuButton.querySelector('i');
+                    if (mobileMenu.classList.contains('hidden')) {
+                        icon.className = 'fa-solid fa-bars'; // Change to hamburger icon
+                    } else {
+                        icon.className = 'fa-solid fa-xmark'; // Change to close icon
+                    }
+                });
+            }
+            
+            // 4. Syllabus Download Modal Logic
+            const downloadBtn = document.getElementById('download-syllabus-btn');
+            const closeModalBtn = document.getElementById('close-modal-btn');
+            const modal = document.getElementById('syllabus-modal');
+            const syllabusForm = document.getElementById('syllabus-form');
+            const successMessage = document.getElementById('success-message');
+
+            if (downloadBtn && modal && closeModalBtn) {
+                downloadBtn.addEventListener('click', () => {
+                    modal.classList.remove('hidden');
+                    syllabusForm.classList.remove('hidden');
+                    successMessage.classList.add('hidden');
+                });
+
+                closeModalBtn.addEventListener('click', () => {
+                    modal.classList.add('hidden');
+                });
+                
+                // Close modal when clicking outside (on the overlay)
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        modal.classList.add('hidden');
+                    }
+                });
+            }
+        });
+
+        // 3. FAQ Accordion Logic
+        function toggleFaq(element) {
+            const answer = element.nextElementSibling;
+            const icon = element.querySelector('i');
+            
+            // Close all other open answers
+            document.querySelectorAll('.faq-answer.open').forEach(openAnswer => {
+                if (openAnswer !== answer) {
+                    openAnswer.classList.remove('open');
+                    openAnswer.previousElementSibling.querySelector('i').classList.remove('rotate-180');
+                }
+            });
+
+            // Toggle the clicked answer
+            answer.classList.toggle('open');
+            icon.classList.toggle('rotate-180');
+        }
+
+        // 5. Syllabus Download Handler (Global function for form onsubmit)
+        function handleSyllabusDownload(event) {
+            event.preventDefault();
+            
+            const form = event.target;
+            const submitBtn = document.getElementById('form-submit-btn');
+            const successMessage = document.getElementById('success-message');
+            const directDownloadLink = document.getElementById('direct-download-link');
+
+            // 1. Simulate form submission/data capture (In a real app, this would be an API call)
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Processing...';
+            submitBtn.disabled = true;
+
+            // --- START: Placeholder PDF Generation ---
+            // A minimal working placeholder PDF base64 string for demonstrating download functionality.
+            const placeholderPdfBase64 = 'JVBERi0xLjQKJcOkw7zDtsSFCjEgMCBvYmoKPDwvVHlwZS9DYXRhbG9nL1BhZ2VzIDIgMCBSPj4KZW5kb2JqCjIgMCBvYmoKPDwvVHlwZS9QYWdlcy9LaWRzWzMgMCBSXS9Db3VudCAxPj4KZW5kb2JqCjMgMCBvYmoKPDwvVHlwZS9QYWdlL1BhcmVudCAyIDAgUi9NZWRpYUJveFswIDAgNTk1IDg0Ml0vQ29udGVudHMgNCAwIFI+PgplbmRvYmoKNSAwIG9iagocL1R5cGUvQ29udGVudHMvTGVuZ3RoIDYvRmlsdGVyL0ZsYXRlRGVjb2RlPj4KZW5kb2JqCjYgMCBvYmoKPDwvTGVuZ3RoIDY5Pj4Kc3RyZWFtCnBTIC9GMSAxMiBUZgpCVAoyODUgNzgwIFRkCiAwIFQgZChTYW1wbGUgU3lsbGFidXMgUEFGKSBlbmQKZW5kc3RyZWFtCmVuZG9iagp4cmVmCjAgNwpEMTAwMDAwMDAwMCA2NTUzNSBmCmQxMDk5ODIwIDAwMDAwIG4Kc2QzNTA5NjgwIDAwMDAwIG4KZmY3NzQ4MzA5IDAwMDAwIG4KZWQ1ODUxMTY0IDAwMDAwIG4KdGZiMjY5MzY5IDAwMDAwIG4KZW5kb2JqCnRyYWlsZXIKPDwvUm9vdCAxIDAgUi9TaXplIDc+PgpzdGFydHhyZWYKMzcwCmQlJVVQRkVlCg==';
+            
+            const base64toBlob = (base64) => {
+                const byteCharacters = atob(base64);
+                const byteNumbers = new Array(byteCharacters.length);
+                for (let i = 0; i < byteCharacters.length; i++) {
+                    byteNumbers[i] = byteCharacters.charCodeAt(i);
+                }
+                const byteArray = new Uint8Array(byteNumbers);
+                return new Blob([byteArray], { type: 'application/pdf' });
+            };
+            // --- END: Placeholder PDF Generation ---
+
+            // Simulate API delay for a moment
+            setTimeout(() => {
+                // Get data from form (optional, for real API submission)
+                const name = form.elements['name'].value;
+                const email = form.elements['email'].value;
+                const mobile = form.elements['mobile'].value;
+
+                // 2. Create Blob and URL for PDF
+                const pdfBlob = base64toBlob(placeholderPdfBase64);
+                const pdfUrl = URL.createObjectURL(pdfBlob);
+                
+                // 3. Set direct download link
+                directDownloadLink.href = pdfUrl;
+
+                // 4. Trigger download
+                const tempLink = document.createElement('a');
+                tempLink.href = pdfUrl;
+                tempLink.download = 'VAPT_Syllabus_SAMCOMMUNITY.pdf';
+                document.body.appendChild(tempLink);
+                tempLink.click();
+                document.body.removeChild(tempLink);
+                
+                // 5. Show success message
+                form.classList.add('hidden');
+                successMessage.classList.remove('hidden');
+
+            }, 1500); // 1.5 second delay
+        }
+    </script>
+
+</body>
+</html>
