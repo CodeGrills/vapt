@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Powered Penetration Testing Course</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for a cleaner, darker aesthetic */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .text-accent {
+            color: #34D399; /* Emerald Green for Cyber Theme */
+        }
+        .border-accent {
+            border-color: #34D399;
+        }
+        .bg-card {
+            background-color: #1F2937; /* Darker Slate/Card Background */
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out, padding 0.4s ease-out;
+        }
+        .accordion-content.open {
+            max-height: 1000px; /* Large enough value to cover content */
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-dark': '#0F172A',
+                        'secondary-dark': '#1E293B',
+                        'accent': '#34D399', // Emerald
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-primary-dark text-gray-200 antialiased">
+
+    <!-- Navigation Bar (Simple Placeholder) -->
+    <nav class="sticky top-0 z-50 bg-primary-dark shadow-lg shadow-gray-900/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
+            <div class="text-xl font-bold flex items-center">
+                <span class="text-accent text-3xl mr-1">λ</span>
+                Cyber<span class="text-accent">Bootcamp</span>
+            </div>
+            <a href="#fees" class="bg-accent text-primary-dark font-semibold py-2 px-4 rounded-lg hover:bg-emerald-400 transition duration-300 shadow-md">
+                Enroll Now
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="pt-16 pb-20 bg-secondary-dark/50">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <span class="text-accent text-sm font-semibold uppercase tracking-widest bg-secondary-dark py-1 px-3 rounded-full mb-4 inline-block">
+                Online Live Batch
+            </span>
+            <h1 class="text-5xl md:text-7xl font-extrabold text-white leading-tight mb-4">
+                Master <span class="text-accent">AI-Powered</span> Penetration Testing
+            </h1>
+            <p class="text-xl text-gray-400 mb-10 max-w-3xl mx-auto">
+                Join the ultimate certification course to launch your high-growth career in offensive security. Learn to think like a hacker to protect organizations.
+            </p>
+            
+            <!-- Key Stats -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12 max-w-4xl mx-auto">
+                <div class="p-4 bg-card rounded-xl shadow-lg border-t-4 border-accent">
+                    <p class="text-3xl font-bold text-white">4.9</p>
+                    <p class="text-sm text-gray-400">Rating (3,820 Reviews)</p>
+                </div>
+                <div class="p-4 bg-card rounded-xl shadow-lg border-t-4 border-accent">
+                    <p class="text-3xl font-bold text-white">4,200+</p>
+                    <p class="text-sm text-gray-400">Aspirants Mentored</p>
+                </div>
+                <div class="p-4 bg-card rounded-xl shadow-lg border-t-4 border-accent">
+                    <p class="text-3xl font-bold text-white">18</p>
+                    <p class="text-sm text-gray-400">Weeks Duration</p>
+                </div>
+                <div class="p-4 bg-card rounded-xl shadow-lg border-t-4 border-accent">
+                    <p class="text-3xl font-bold text-white">₹9 LPA</p>
+                    <p class="text-sm text-gray-400">Maximum Compensation</p>
+                </div>
+            </div>
+
+            <!-- CTAs -->
+            <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6">
+                <a href="#fees" class="bg-accent text-primary-dark font-bold text-lg py-3 px-8 rounded-xl hover:bg-emerald-400 transition duration-300 shadow-xl shadow-accent/30">
+                    Book a Free Demo Now
+                </a>
+                <a href="#syllabus" class="bg-transparent border-2 border-gray-500 text-gray-200 font-bold text-lg py-3 px-8 rounded-xl hover:bg-gray-700 transition duration-300">
+                    Download Curriculum
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Companies Section (Placeholder) -->
+    <section class="py-12 bg-primary-dark">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-xl font-semibold text-gray-400 mb-6">Our learners work at top companies worldwide</h2>
+            <div class="flex flex-wrap justify-center gap-6 opacity-75">
+                <!-- Replace with real logos or use text placeholders -->
+                <span class="text-3xl font-bold text-white/50">TechCorp</span>
+                <span class="text-3xl font-bold text-white/50">CyberSec Ltd</span>
+                <span class="text-3xl font-bold text-white/50">Global Bank</span>
+                <span class="text-3xl font-bold text-white/50">Innovate</span>
+                <span class="text-3xl font-bold text-white/50">SecureNet</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Who Should Join Section -->
+    <section id="audience" class="py-20">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl font-bold text-center mb-12">Who Should Join This Penetration Testing Course?</h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Audience Card 1 -->
+                <div class="p-6 bg-card rounded-xl shadow-2xl transition duration-300 hover:scale-[1.02] border-b-4 border-accent/50">
+                    <p class="text-accent text-3xl mb-3">🧑‍🎓</p>
+                    <h3 class="text-xl font-semibold text-white mb-2">Freshers & Undergrads</h3>
+                    <p class="text-gray-400">Launch your career in the high-demand cybersecurity domain right after graduation.</p>
+                </div>
+                <!-- Audience Card 2 -->
+                <div class="p-6 bg-card rounded-xl shadow-2xl transition duration-300 hover:scale-[1.02] border-b-4 border-accent/50">
+                    <p class="text-accent text-3xl mb-3">💼</p>
+                    <h3 class="text-xl font-semibold text-white mb-2">Working Professionals</h3>
+                    <p class="text-gray-400">Upskill and specialize in penetration testing to boost your current tech profile.</p>
+                </div>
+                <!-- Audience Card 3 -->
+                <div class="p-6 bg-card rounded-xl shadow-2xl transition duration-300 hover:scale-[1.02] border-b-4 border-accent/50">
+                    <p class="text-accent text-3xl mb-3">🔄</p>
+                    <h3 class="text-xl font-semibold text-white mb-2">Career Transitioners</h3>
+                    <p class="text-gray-400">Make a successful switch into cybersecurity from allied or non-tech roles.</p>
+                </div>
+                <!-- Audience Card 4 -->
+                <div class="p-6 bg-card rounded-xl shadow-2xl transition duration-300 hover:scale-[1.02] border-b-4 border-accent/50">
+                    <p class="text-accent text-3xl mb-3">👨‍💻</p>
+                    <h3 class="text-xl font-semibold text-white mb-2">IT Professionals</h3>
+                    <p class="text-gray-400">Developers, SysAdmins, and QA looking to secure their systems from the ground up.</p>
+                </div>
+                <!-- Audience Card 5 -->
+                <div class="p-6 bg-card rounded-xl shadow-2xl transition duration-300 hover:scale-[1.02] border-b-4 border-accent/50">
+                    <p class="text-accent text-3xl mb-3">🧠</p>
+                    <h3 class="text-xl font-semibold text-white mb-2">Ethical Hackers</h3>
+                    <p class="text-gray-400">Formalize your skills and gain certification using industry-standard methodologies.</p>
+                </div>
+                <!-- Audience Card 6 -->
+                <div class="p-6 bg-card rounded-xl shadow-2xl transition duration-300 hover:scale-[1.02] border-b-4 border-accent/50">
+                    <p class="text-accent text-3xl mb-3">☁️</p>
+                    <h3 class="text-xl font-semibold text-white mb-2">Cloud Engineers</h3>
+                    <p class="text-gray-400">Specialize in testing modern cloud infrastructure (AWS, Azure, GCP) security.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Course Highlights Section -->
+    <section id="highlights" class="py-20 bg-secondary-dark/50">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl font-bold text-center mb-6">Course Highlights</h2>
+            <p class="text-center text-gray-400 mb-12">Explore what makes this online pentesting course highly effective and industry-powered.</p>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Highlight 1 -->
+                <div class="text-center p-6 bg-card rounded-xl shadow-xl">
+                    <div class="text-5xl text-accent mb-3">👨‍🏫</div>
+                    <h3 class="text-xl font-semibold text-white mb-1">Experienced Mentors</h3>
+                    <p class="text-gray-400 text-sm">Learn from seasoned cybersecurity professionals with real-world experience.</p>
+                </div>
+                <!-- Highlight 2 -->
+                <div class="text-center p-6 bg-card rounded-xl shadow-xl">
+                    <div class="text-5xl text-accent mb-3">💬</div>
+                    <h3 class="text-xl font-semibold text-white mb-1">Dedicated Doubt Resolutions</h3>
+                    <p class="text-gray-400 text-sm">Access 1:1 sessions to resolve all technical queries efficiently.</p>
+                </div>
+                <!-- Highlight 3 -->
+                <div class="text-center p-6 bg-card rounded-xl shadow-xl">
+                    <div class="text-5xl text-accent mb-3">📈</div>
+                    <h3 class="text-xl font-semibold text-white mb-1">Career Guidance</h3>
+                    <p class="text-gray-400 text-sm">Includes resume building, interview prep, and LinkedIn optimization.</p>
+                </div>
+                <!-- Highlight 4 -->
+                <div class="text-center p-6 bg-card rounded-xl shadow-xl">
+                    <div class="text-5xl text-accent mb-3">📄</div>
+                    <h3 class="text-xl font-semibold text-white mb-1">Industry-Relevant Curriculum</h3>
+                    <p class="text-gray-400 text-sm">Syllabus designed based on current security practices and standards.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Roadmap Section -->
+    <section id="roadmap" class="py-20">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl font-bold text-center mb-12">How Does This Course Work?</h2>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- Step 1: Learn -->
+                <div class="text-center p-6 bg-card rounded-xl shadow-lg border-t-8 border-accent">
+                    <div class="text-5xl font-extrabold text-accent mb-2">1</div>
+                    <h3 class="text-2xl font-semibold text-white mb-2">Learn</h3>
+                    <p class="text-gray-400">Gain deep insights from 100+ hours of live classes with industry veterans.</p>
+                </div>
+                <!-- Step 2: Practice -->
+                <div class="text-center p-6 bg-card rounded-xl shadow-lg border-t-8 border-emerald-500">
+                    <div class="text-5xl font-extrabold text-accent mb-2">2</div>
+                    <h3 class="text-2xl font-semibold text-white mb-2">Practice</h3>
+                    <p class="text-gray-400">Sharpen skills through 18+ live projects, assignments, and regular quizzes.</p>
+                </div>
+                <!-- Step 3: Ask -->
+                <div class="text-center p-6 bg-card rounded-xl shadow-lg border-t-8 border-teal-500">
+                    <div class="text-5xl font-extrabold text-accent mb-2">3</div>
+                    <h3 class="text-2xl font-semibold text-white mb-2">Ask</h3>
+                    <p class="text-gray-400">Resolve all your technical queries instantly with dedicated mentorship.</p>
+                </div>
+                <!-- Step 4: Build -->
+                <div class="text-center p-6 bg-card rounded-xl shadow-lg border-t-8 border-cyan-500">
+                    <div class="text-5xl font-extrabold text-accent mb-2">4</div>
+                    <h3 class="text-2xl font-semibold text-white mb-2">Build</h3>
+                    <p class="text-gray-400">Craft a professional portfolio and an appealing resume to showcase your expertise.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Syllabus Section (Accordion) -->
+    <section id="syllabus" class="py-20 bg-secondary-dark/50">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl font-bold text-center mb-6">Penetration Testing Course Syllabus</h2>
+            <p class="text-center text-gray-400 mb-12">Explore the detailed curriculum designed according to industry standards!</p>
+
+            <div id="syllabus-accordion" class="space-y-4">
+                <!-- Milestone 1 -->
+                <div class="bg-card rounded-xl shadow-xl overflow-hidden border border-gray-700">
+                    <button class="accordion-trigger w-full flex justify-between items-center p-6 font-semibold text-white hover:bg-gray-700 transition duration-150" data-target="m1">
+                        <span class="text-xl text-accent">Milestone 1: Network Reconnaissance Mastery (2 Weeks)</span>
+                        <svg class="w-5 h-5 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div id="m1" class="accordion-content bg-gray-800/50">
+                        <ul class="text-gray-400 px-6 space-y-2">
+                            <li><span class="text-accent font-medium">Module 1:</span> The Art of Network Scanning (Nmap, Advanced Commands, Scripts)</li>
+                            <li><span class="text-accent font-medium">Module 2:</span> Firewall Bypassing Techniques (Zombie Scan, ICMP Scan, Decoy Scan)</li>
+                            <li class="pt-2 italic text-sm text-gray-500">Includes 2 Projects, 2 Case Studies, 2 Quizzes.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Milestone 2 -->
+                <div class="bg-card rounded-xl shadow-xl overflow-hidden border border-gray-700">
+                    <button class="accordion-trigger w-full flex justify-between items-center p-6 font-semibold text-white hover:bg-gray-700 transition duration-150" data-target="m2">
+                        <span class="text-xl text-accent">Milestone 2: Elite Web Pen-Testing Techniques (9 Weeks)</span>
+                        <svg class="w-5 h-5 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div id="m2" class="accordion-content bg-gray-800/50">
+                        <ul class="text-gray-400 px-6 space-y-2">
+                            <li><span class="text-accent font-medium">Module 5:</span> OWASP Top 10 in Action Using AI (Injection, Broken Access Control, Security Misconfiguration)</li>
+                            <li><span class="text-accent font-medium">Module 6:</span> Information Gathering Like a Pro using AI (Burp Suite, Footprinting)</li>
+                            <li><span class="text-accent font-medium">Module 9 & 10:</span> The Power of SQL Injection and Injection Attacks Unleashed (XSS, SSRF, XXE)</li>
+                            <li><span class="text-accent font-medium">Module 11:</span> Client-Side & Server-Side Attacks with AI (CSRF, SSRF)</li>
+                            <li class="pt-2 italic text-sm text-gray-500">Includes 9 Projects, 9 Case Studies, 9 Quizzes.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Milestone 3 -->
+                <div class="bg-card rounded-xl shadow-xl overflow-hidden border border-gray-700">
+                    <button class="accordion-trigger w-full flex justify-between items-center p-6 font-semibold text-white hover:bg-gray-700 transition duration-150" data-target="m3">
+                        <span class="text-xl text-accent">Milestone 3: APK Pen-Testing Demystified (2 Weeks)</span>
+                        <svg class="w-5 h-5 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div id="m3" class="accordion-content bg-gray-800/50">
+                        <ul class="text-gray-400 px-6 space-y-2">
+                            <li><span class="text-accent font-medium">Module 12:</span> LAB Setup & All about APK With AI (MobSF, Decompiling)</li>
+                            <li><span class="text-accent font-medium">Module 13:</span> Top 10 APK Vulnerabilities with AI (Insecure Storage, Reverse Engineering)</li>
+                            <li class="pt-2 italic text-sm text-gray-500">Includes 3 Projects, 2 Case Studies, 2 Quizzes.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                 <!-- Milestone 4 & 5 -->
+                 <div class="bg-card rounded-xl shadow-xl overflow-hidden border border-gray-700">
+                    <button class="accordion-trigger w-full flex justify-between items-center p-6 font-semibold text-white hover:bg-gray-700 transition duration-150" data-target="m45">
+                        <span class="text-xl text-accent">Milestone 4 & 5: Automation Scripts & Career Success (5 Weeks)</span>
+                        <svg class="w-5 h-5 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div id="m45" class="accordion-content bg-gray-800/50">
+                        <ul class="text-gray-400 px-6 space-y-2">
+                            <li><span class="text-accent font-medium">Module 14:</span> Shell Scripting for Pentesters with AI</li>
+                            <li><span class="text-accent font-medium">Module 15:</span> Python for Pentesters with AI (Web Crawling & Parameter Analysis)</li>
+                            <li><span class="text-accent font-medium">Module 17:</span> Cloud Security Demystified (Cloud Testing on AWS/Azure)</li>
+                            <li><span class="text-accent font-medium">Module 18:</span> Cybersecurity Career Roadmap & Interview Preparations With AI</li>
+                            <li class="pt-2 italic text-sm text-gray-500">Includes Projects on Automation, Cloud Testing, and Final Comprehensive Report.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Career Assistance Section -->
+    <section id="career-support" class="py-20">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="md:flex md:space-x-12 items-center">
+                <div class="md:w-1/2 mb-10 md:mb-0">
+                    <h2 class="text-4xl font-bold mb-4">End-to-End Career Assistance</h2>
+                    <p class="text-gray-400 text-lg mb-8">We provide comprehensive career support to help you achieve your dream job in top-tier security teams.</p>
+                    <a href="#fees" class="bg-accent text-primary-dark font-bold py-3 px-6 rounded-xl hover:bg-emerald-400 transition duration-300 shadow-lg">
+                        Talk to Program Advisor
+                    </a>
+                </div>
+                <div class="md:w-1/2 grid grid-cols-2 gap-6">
+                    <div class="p-4 bg-card rounded-lg shadow-md border-l-4 border-accent"><p class="font-semibold text-white">Resume Revamp</p><p class="text-sm text-gray-400">Polish resumes to stand out to employers.</p></div>
+                    <div class="p-4 bg-card rounded-lg shadow-md border-l-4 border-accent"><p class="font-semibold text-white">LinkedIn Optimization</p><p class="text-sm text-gray-400">Improve profile visibility and networking.</p></div>
+                    <div class="p-4 bg-card rounded-lg shadow-md border-l-4 border-accent"><p class="font-semibold text-white">GitHub Mastery</p><p class="text-sm text-gray-400">Enhance profiles to showcase your projects.</p></div>
+                    <div class="p-4 bg-card rounded-lg shadow-md border-l-4 border-accent"><p class="font-semibold text-white">Portfolio Building</p><p class="text-sm text-gray-400">Refine a professional portfolio of hacks.</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Certification & Fees Section -->
+    <section id="fees" class="py-20 bg-secondary-dark/50">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <!-- Certification Block -->
+                <div class="p-8 bg-card rounded-xl shadow-2xl border-t-8 border-yellow-500">
+                    <h3 class="text-3xl font-bold text-yellow-400 mb-4">Be in the spotlight by getting certified!</h3>
+                    <ul class="space-y-4 text-gray-300">
+                        <li class="flex items-start">
+                            <span class="text-yellow-400 text-2xl mr-3">🏆</span>
+                            <div>
+                                <p class="font-semibold">Industry-Recognized Certificate</p>
+                                <p class="text-sm text-gray-400">Earn a certificate valued by top companies in the security space.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-yellow-400 text-2xl mr-3">🚀</span>
+                            <div>
+                                <p class="font-semibold">Your Passport to Career Growth</p>
+                                <p class="text-sm text-gray-400">Access well-paying Penetration Tester and Security Analyst positions.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Fees Block -->
+                <div class="p-8 bg-card rounded-xl shadow-2xl border-t-8 border-accent">
+                    <h3 class="text-3xl font-bold text-white mb-2">Fee Structure</h3>
+                    <p class="text-gray-400 mb-6">Total Program Fee (Limited Time Offer):</p>
+                    
+                    <p class="text-5xl font-extrabold text-accent mb-2">
+                        INR 24,999/-
+                    </p>
+                    <p class="text-xl text-gray-500 line-through mb-8">
+                        INR 45,000/-
+                    </p>
+
+                    <a href="#fees" class="w-full block text-center bg-accent text-primary-dark font-bold text-xl py-4 px-8 rounded-xl hover:bg-emerald-400 transition duration-300 shadow-2xl shadow-accent/50">
+                        Apply Now & Grab the Offer
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section (Accordion) -->
+    <section id="faq" class="py-20">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl font-bold text-center mb-6">Online Penetration Testing Course - FAQs</h2>
+            <p class="text-center text-gray-400 mb-12">Here's everything you may ask about the program.</p>
+
+            <div id="faq-accordion" class="space-y-4">
+                <!-- FAQ 1 -->
+                <div class="bg-card rounded-xl shadow-lg border border-gray-700">
+                    <button class="accordion-trigger w-full flex justify-between items-center p-5 font-medium text-white hover:bg-gray-700/80 transition duration-150" data-target="q1">
+                        What is penetration testing and why is it necessary?
+                        <svg class="w-5 h-5 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div id="q1" class="accordion-content">
+                        <p class="text-gray-400 px-5">Penetration testing is the practice of ethically testing a computer system, network, or web application to find security vulnerabilities that an attacker could exploit. It is essential because it helps identify and fix these flaws before they can be leveraged by malicious actors, protecting data and client trust.</p>
+                    </div>
+                </div>
+                <!-- FAQ 2 -->
+                <div class="bg-card rounded-xl shadow-lg border border-gray-700">
+                    <button class="accordion-trigger w-full flex justify-between items-center p-5 font-medium text-white hover:bg-gray-700/80 transition duration-150" data-target="q2">
+                        What skills will I gain from this comprehensive course?
+                        <svg class="w-5 h-5 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div id="q2" class="accordion-content">
+                        <p class="text-gray-400 px-5">You will master network reconnaissance, web application attacks (OWASP Top 10), Android APK analysis, cloud security concepts, and vulnerability automation using Python and Shell scripting. You will be able to conduct end-to-end security audits.</p>
+                    </div>
+                </div>
+                <!-- FAQ 3 -->
+                <div class="bg-card rounded-xl shadow-lg border border-gray-700">
+                    <button class="accordion-trigger w-full flex justify-between items-center p-5 font-medium text-white hover:bg-gray-700/80 transition duration-150" data-target="q3">
+                        What are the prerequisites for joining the training?
+                        <svg class="w-5 h-5 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div id="q3" class="accordion-content">
+                        <p class="text-gray-400 px-5">A basic understanding of networking, operating systems (Linux is a plus), and general programming concepts is helpful. While not strictly mandatory, previous exposure to ethical hacking concepts will make the course easier.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="bg-primary-dark border-t border-gray-800 py-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-lg font-bold text-accent mb-4">CyberBootcamp</p>
+            <p class="text-gray-400 mb-2">Elevate Your Learning Journey with Cutting-Edge Education Technology.</p>
+            <div class="flex justify-center space-x-6 text-sm text-gray-500 mt-6">
+                <a href="#" class="hover:text-accent transition duration-300">Privacy Policy</a>
+                <a href="#" class="hover:text-accent transition duration-300">Terms & Conditions</a>
+                <a href="#" class="hover:text-accent transition duration-300">Refund Policy</a>
+                <a href="#faq" class="hover:text-accent transition duration-300">FAQ's</a>
+            </div>
+            <p class="text-sm text-gray-600 mt-8">© Copyright 2025, All Rights Reserved By CyberBootcamp.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Accordions -->
+    <script>
+        /**
+         * Toggles the visibility of accordion content and rotates the icon.
+         */
+        document.addEventListener('DOMContentLoaded', () => {
+            const triggers = document.querySelectorAll('.accordion-trigger');
+
+            triggers.forEach(trigger => {
+                trigger.addEventListener('click', () => {
+                    const targetId = trigger.getAttribute('data-target');
+                    const content = document.getElementById(targetId);
+                    const icon = trigger.querySelector('svg');
+
+                    // Close all other open accordions
+                    document.querySelectorAll('.accordion-content.open').forEach(openContent => {
+                        if (openContent.id !== targetId) {
+                            openContent.classList.remove('open');
+                            openContent.previousElementSibling.querySelector('svg').style.transform = 'rotate(0deg)';
+                        }
+                    });
+
+                    // Toggle the clicked accordion
+                    content.classList.toggle('open');
+
+                    if (content.classList.contains('open')) {
+                        icon.style.transform = 'rotate(180deg)';
+                    } else {
+                        icon.style.transform = 'rotate(0deg)';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
