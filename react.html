@@ -1,0 +1,717 @@
+import React, { useState, useEffect } from 'react';
+import { 
+  BookOpen, 
+  Mic, 
+  Search, 
+  User, 
+  Menu, 
+  X, 
+  Heart, 
+  Share2, 
+  Calendar, 
+  MessageCircle, 
+  Video, 
+  MicOff, 
+  Hand, 
+  MoreVertical, 
+  LogOut, 
+  PlusCircle, 
+  Shield, 
+  Users, 
+  Globe,
+  Music,
+  Feather
+} from 'lucide-react';
+
+// --- Mock Data ---
+
+const MOCK_POETRY = [
+  {
+    id: 1,
+    title: "Rekhta",
+    titleUrdu: "ریختہ",
+    poet: "Mirza Ghalib",
+    preview: "Rekhta ke tumhi ustad nahi ho Ghalib...",
+    previewUrdu: "ریختہ کے تم ہی استاد نہیں ہو غالب",
+    type: "Ghazal",
+    likes: 1240,
+    tags: ["Classic", "Urdu"]
+  },
+  {
+    id: 2,
+    title: "Madhushala",
+    titleUrdu: "مَدھُوشالا",
+    poet: "Harivansh Rai Bachchan",
+    preview: "Mridu bhavon ke anguro ki...",
+    previewUrdu: "مِردُو بھاووں کے انگوروں کی",
+    type: "Nazm",
+    likes: 980,
+    tags: ["Hindi", "Philosophy"]
+  },
+  {
+    id: 3,
+    title: "The Road Not Taken",
+    titleUrdu: "دی روڈ ناٹ ٹیکن",
+    poet: "Robert Frost",
+    preview: "Two roads diverged in a yellow wood...",
+    previewUrdu: "دو راستے ایک زرد جنگل میں الگ ہوئے",
+    type: "Free Verse",
+    likes: 850,
+    tags: ["English", "Life"]
+  }
+];
+
+const MOCK_ROOMS = [
+  {
+    id: 101,
+    title: "Sham-e-Ghazal: Jagjit Special",
+    host: "Ustad Raheem",
+    speakers: 3,
+    audience: 45,
+    lang: "Urdu/Hindi",
+    tags: ["Music", "Live"],
+    thumbnail: "bg-amber-100"
+  },
+  {
+    id: 102,
+    title: "Modern Hindi Poetry Discussion",
+    host: "Kavita Corner",
+    speakers: 5,
+    audience: 12,
+    lang: "Hindi",
+    tags: ["Debate", "Literature"],
+    thumbnail: "bg-rose-100"
+  },
+  {
+    id: 103,
+    title: "Learning Urdu Script for Beginners",
+    host: "Urdu Academy",
+    speakers: 2,
+    audience: 110,
+    lang: "English/Urdu",
+    tags: ["Education"],
+    thumbnail: "bg-emerald-100"
+  }
+];
+
+// --- Components ---
+
+const Button = ({ children, variant = "primary", className = "", ...props }) => {
+  const baseStyle = "px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2";
+  const variants = {
+    primary: "bg-rose-900 text-white hover:bg-rose-800 shadow-sm",
+    secondary: "bg-stone-200 text-stone-800 hover:bg-stone-300",
+    outline: "border border-stone-300 text-stone-700 hover:bg-stone-50",
+    ghost: "text-stone-600 hover:bg-stone-100",
+    danger: "bg-red-600 text-white hover:bg-red-700"
+  };
+  return (
+    <button className={`${baseStyle} ${variants[variant]} ${className}`} {...props}>
+      {children}
+    </button>
+  );
+};
+
+const Card = ({ children, className = "" }) => (
+  <div className={`bg-white rounded-xl border border-stone-200 shadow-sm overflow-hidden ${className}`}>
+    {children}
+  </div>
+);
+
+const Badge = ({ children, color = "stone" }) => {
+  const colors = {
+    stone: "bg-stone-100 text-stone-700",
+    rose: "bg-rose-100 text-rose-800",
+    amber: "bg-amber-100 text-amber-800",
+    emerald: "bg-emerald-100 text-emerald-800"
+  };
+  return (
+    <span className={`px-2 py-1 rounded-full text-xs font-semibold ${colors[color] || colors.stone}`}>
+      {children}
+    </span>
+  );
+};
+
+// --- Main Application ---
+
+export default function SherOSuroorApp() {
+  const [currentView, setCurrentView] = useState('home'); // home, explore, lobby, room, dashboard, admin
+  const [userRole, setUserRole] = useState('visitor'); // visitor, user, creator, moderator, admin
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [activeRoomData, setActiveRoomData] = useState(null);
+
+  // Role Simulation Logic
+  const canCreateContent = ['creator', 'moderator', 'admin'].includes(userRole);
+  const canModerate = ['moderator', 'admin'].includes(userRole);
+  
+  const handleJoinRoom = (room) => {
+    setActiveRoomData(room);
+    setCurrentView('room');
+  };
+
+  const handleLeaveRoom = () => {
+    setActiveRoomData(null);
+    setCurrentView('lobby');
+  };
+
+  // --- Views ---
+
+  const Navbar = () => (
+    <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-stone-200 shadow-sm">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between h-16 items-center">
+          {/* Logo */}
+          <div className="flex items-center gap-2 cursor-pointer" onClick={() => setCurrentView('home')}>
+            <div className="w-8 h-8 bg-rose-900 rounded-lg flex items-center justify-center text-white font-serif font-bold text-xl">
+              S
+            </div>
+            <div className="hidden md:block">
+              <h1 className="text-xl font-serif font-bold text-stone-900">Sher-o-Suroor</h1>
+              <p className="text-xs text-rose-800 uppercase tracking-widest">Poetry & Rhythm</p>
+            </div>
+          </div>
+
+          {/* Desktop Nav */}
+          <div className="hidden md:flex space-x-8 items-center">
+            <button onClick={() => setCurrentView('home')} className={`text-sm font-medium ${currentView === 'home' ? 'text-rose-900' : 'text-stone-600 hover:text-stone-900'}`}>Home</button>
+            <button onClick={() => setCurrentView('explore')} className={`text-sm font-medium ${currentView === 'explore' ? 'text-rose-900' : 'text-stone-600 hover:text-stone-900'}`}>Literature</button>
+            <button onClick={() => setCurrentView('lobby')} className={`text-sm font-medium ${currentView === 'lobby' ? 'text-rose-900' : 'text-stone-600 hover:text-stone-900'}`}>Live Rooms</button>
+            {canCreateContent && (
+              <button onClick={() => setCurrentView('dashboard')} className={`text-sm font-medium ${currentView === 'dashboard' ? 'text-rose-900' : 'text-stone-600 hover:text-stone-900'}`}>Studio</button>
+            )}
+            {canModerate && (
+              <button onClick={() => setCurrentView('admin')} className={`text-sm font-medium ${currentView === 'admin' ? 'text-rose-900' : 'text-stone-600 hover:text-stone-900'}`}>Mod Panel</button>
+            )}
+          </div>
+
+          {/* Right Action & Profile */}
+          <div className="flex items-center gap-3">
+            <div className="hidden md:flex relative items-center">
+               <input 
+                 type="text" 
+                 placeholder="Search poets, ghazals..." 
+                 className="pl-9 pr-4 py-1.5 text-sm rounded-full bg-stone-100 border-none focus:ring-2 focus:ring-rose-900/20 w-48"
+               />
+               <Search className="w-4 h-4 absolute left-3 text-stone-400" />
+            </div>
+
+            {/* Role Switcher (For Demo) */}
+            <select 
+              value={userRole} 
+              onChange={(e) => setUserRole(e.target.value)}
+              className="hidden md:block text-xs border border-stone-300 rounded px-2 py-1 bg-stone-50 text-stone-600 cursor-pointer"
+            >
+              <option value="visitor">Visitor View</option>
+              <option value="user">User View</option>
+              <option value="creator">Creator View</option>
+              <option value="moderator">Mod View</option>
+              <option value="admin">Admin View</option>
+            </select>
+
+            {userRole === 'visitor' ? (
+              <Button variant="primary" className="hidden md:flex text-sm py-1.5">Login</Button>
+            ) : (
+              <div className="w-8 h-8 rounded-full bg-rose-100 flex items-center justify-center text-rose-800 font-bold border border-rose-200">
+                {userRole[0].toUpperCase()}
+              </div>
+            )}
+            
+            <button className="md:hidden p-2" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+              {isMobileMenuOpen ? <X className="w-6 h-6 text-stone-600"/> : <Menu className="w-6 h-6 text-stone-600"/>}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Menu */}
+      {isMobileMenuOpen && (
+        <div className="md:hidden bg-white border-b border-stone-200 px-4 py-4 space-y-4">
+          <input type="text" placeholder="Search..." className="w-full p-2 rounded bg-stone-100 text-sm" />
+          <div className="flex flex-col gap-3">
+            <button onClick={() => {setCurrentView('home'); setIsMobileMenuOpen(false);}} className="text-left font-medium text-stone-700">Home</button>
+            <button onClick={() => {setCurrentView('explore'); setIsMobileMenuOpen(false);}} className="text-left font-medium text-stone-700">Literature</button>
+            <button onClick={() => {setCurrentView('lobby'); setIsMobileMenuOpen(false);}} className="text-left font-medium text-stone-700">Live Rooms</button>
+            <div className="border-t pt-3">
+               <p className="text-xs text-stone-400 mb-2">Simulate Role:</p>
+               <select value={userRole} onChange={(e) => setUserRole(e.target.value)} className="w-full p-2 border rounded text-sm">
+                  <option value="visitor">Visitor</option>
+                  <option value="user">User</option>
+                  <option value="creator">Creator</option>
+                  <option value="moderator">Moderator</option>
+               </select>
+            </div>
+          </div>
+        </div>
+      )}
+    </nav>
+  );
+
+  const HomeView = () => (
+    <div className="space-y-12 pb-12">
+      {/* Hero Section */}
+      <div className="relative bg-stone-900 text-white py-16 px-4 overflow-hidden">
+        <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/arabesque.png')]"></div>
+        <div className="relative max-w-4xl mx-auto text-center space-y-6">
+          <h1 className="text-4xl md:text-6xl font-serif font-bold text-amber-50">
+            Where Words Find Their Rhythm
+          </h1>
+          <p className="text-lg text-stone-300 max-w-2xl mx-auto">
+            Join the premier community for Urdu, Hindi, and English literature. 
+            Archive the classics, perform live, and connect with fellow poets.
+          </p>
+          <div className="flex flex-col sm:flex-row justify-center gap-4 pt-4">
+            <Button onClick={() => setCurrentView('explore')} className="py-3 px-8 text-lg">Explore Library</Button>
+            <Button onClick={() => setCurrentView('lobby')} variant="outline" className="py-3 px-8 text-lg border-stone-500 text-stone-300 hover:bg-stone-800 hover:text-white">
+              <Mic className="w-5 h-5" /> Join Live
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      {/* Live Now Section */}
+      <div className="max-w-7xl mx-auto px-4">
+        <div className="flex justify-between items-end mb-6">
+          <div>
+            <h2 className="text-2xl font-serif font-bold text-stone-800 flex items-center gap-2">
+              <span className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></span>
+              Live Now
+            </h2>
+            <p className="text-stone-500">Join active conversations happening right now</p>
+          </div>
+          <Button variant="ghost" onClick={() => setCurrentView('lobby')}>View All</Button>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {MOCK_ROOMS.slice(0, 3).map(room => (
+            <Card key={room.id} className="hover:shadow-lg transition-shadow cursor-pointer group">
+              <div onClick={() => handleJoinRoom(room)} className="p-5 space-y-4">
+                <div className="flex justify-between items-start">
+                  <Badge color="rose">LIVE</Badge>
+                  <span className="text-xs text-stone-500 flex items-center gap-1">
+                    <Users className="w-3 h-3" /> {room.audience + room.speakers}
+                  </span>
+                </div>
+                <div>
+                  <h3 className="font-bold text-lg text-stone-900 group-hover:text-rose-900">{room.title}</h3>
+                  <p className="text-sm text-stone-500 mt-1">Host: {room.host}</p>
+                </div>
+                <div className="flex items-center gap-2 pt-2">
+                  {room.tags.map(tag => (
+                    <span key={tag} className="text-xs bg-stone-100 text-stone-600 px-2 py-1 rounded">{tag}</span>
+                  ))}
+                </div>
+              </div>
+            </Card>
+          ))}
+        </div>
+      </div>
+
+      {/* Featured Poetry Section */}
+      <div className="max-w-7xl mx-auto px-4">
+        <div className="flex justify-between items-end mb-6">
+          <div>
+            <h2 className="text-2xl font-serif font-bold text-stone-800">Featured Literature</h2>
+            <p className="text-stone-500">Curated gems from our repository</p>
+          </div>
+          <Button variant="ghost" onClick={() => setCurrentView('explore')}>Browse Library</Button>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {MOCK_POETRY.map(poem => (
+            <Card key={poem.id} className="p-6 hover:border-rose-200 transition-colors">
+              <div className="mb-4">
+                <span className="text-xs font-semibold text-rose-800 tracking-wider uppercase">{poem.type}</span>
+                <h3 className="text-xl font-serif font-bold mt-1 text-stone-900">{poem.title}</h3>
+                <h4 className="text-lg font-serif text-stone-500 mt-1" dir="rtl">{poem.titleUrdu}</h4>
+              </div>
+              <p className="text-stone-600 italic mb-2 line-clamp-2">"{poem.preview}"</p>
+              <p className="text-stone-500 text-right font-serif text-lg mb-4" dir="rtl">{poem.previewUrdu}</p>
+              <div className="flex justify-between items-center border-t border-stone-100 pt-4 mt-auto">
+                <span className="text-sm font-medium text-stone-800">{poem.poet}</span>
+                <div className="flex gap-3 text-stone-400">
+                  <Heart className="w-4 h-4 hover:text-rose-600 cursor-pointer" />
+                  <Share2 className="w-4 h-4 hover:text-blue-600 cursor-pointer" />
+                </div>
+              </div>
+            </Card>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+
+  const ExploreView = () => (
+    <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+        <div>
+          <h2 className="text-3xl font-serif font-bold text-stone-900">Content Repository</h2>
+          <p className="text-stone-500">Explore Gazals, Nazms, and Classics.</p>
+        </div>
+        <div className="flex gap-2 w-full md:w-auto">
+          <Button variant="outline" className="flex-1 md:flex-none">
+             <Globe className="w-4 h-4" /> Language
+          </Button>
+          <Button variant="outline" className="flex-1 md:flex-none">
+             <Feather className="w-4 h-4" /> Genre
+          </Button>
+        </div>
+      </div>
+
+      <div className="bg-white p-4 rounded-xl border border-stone-200 shadow-sm mb-8 flex gap-2">
+        <Search className="w-5 h-5 text-stone-400 mt-2.5" />
+        <input 
+          type="text" 
+          placeholder="Search by poet, couplet, or keyword..." 
+          className="w-full p-2 outline-none text-stone-700 placeholder-stone-400"
+        />
+        <Button>Search</Button>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        {/* Sidebar Filters */}
+        <div className="hidden lg:block space-y-6">
+          <div>
+            <h3 className="font-bold text-stone-800 mb-3">Categories</h3>
+            <ul className="space-y-2 text-sm text-stone-600">
+              <li className="flex justify-between cursor-pointer hover:text-rose-900 font-medium text-rose-900">All Content <span>12k</span></li>
+              <li className="flex justify-between cursor-pointer hover:text-rose-900">Ghazal <span>3.4k</span></li>
+              <li className="flex justify-between cursor-pointer hover:text-rose-900">Nazm <span>2.1k</span></li>
+              <li className="flex justify-between cursor-pointer hover:text-rose-900">Short Stories <span>850</span></li>
+              <li className="flex justify-between cursor-pointer hover:text-rose-900">Songs/Lyrics <span>1.2k</span></li>
+              <li className="flex justify-between cursor-pointer hover:text-rose-900">Religious <span>500</span></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Content List */}
+        <div className="lg:col-span-3 space-y-4">
+          {MOCK_POETRY.map(item => (
+            <Card key={item.id} className="p-6 flex flex-col md:flex-row gap-6">
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-2">
+                  <Badge>{item.type}</Badge>
+                  <span className="text-xs text-stone-500">{item.tags.join(", ")}</span>
+                </div>
+                <h3 className="text-xl font-serif font-bold text-stone-900">{item.title} / <span className="font-normal">{item.titleUrdu}</span></h3>
+                <p className="text-rose-800 font-medium mb-4">{item.poet}</p>
+                <div className="bg-stone-50 p-4 rounded-lg border border-stone-100">
+                  <p className="text-stone-700 font-serif mb-2 leading-relaxed">{item.preview}</p>
+                  <p className="text-stone-600 font-serif text-right text-lg leading-relaxed" dir="rtl">{item.previewUrdu}</p>
+                </div>
+              </div>
+              <div className="flex md:flex-col justify-between items-end gap-2">
+                <div className="flex items-center gap-1 text-stone-500 text-sm">
+                   <Heart className="w-4 h-4" /> {item.likes}
+                </div>
+                <Button variant="outline" className="text-sm">Read Full</Button>
+              </div>
+            </Card>
+          ))}
+          <div className="text-center pt-8">
+            <Button variant="ghost">Load More Results</Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const LobbyView = () => (
+    <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className="flex justify-between items-center mb-8">
+        <div>
+          <h2 className="text-3xl font-serif font-bold text-stone-900">Live Lounge</h2>
+          <p className="text-stone-500">Drop in to audio/video conversations.</p>
+        </div>
+        {canCreateContent && (
+          <Button onClick={() => setCurrentView('dashboard')}>
+            <PlusCircle className="w-5 h-5" /> Start a Room
+          </Button>
+        )}
+      </div>
+
+      {/* Categories / Filters */}
+      <div className="flex gap-3 overflow-x-auto pb-4 mb-4">
+        <Button variant="primary" className="rounded-full text-sm">All Rooms</Button>
+        <Button variant="outline" className="rounded-full text-sm border-stone-200">Ghazal Sarai</Button>
+        <Button variant="outline" className="rounded-full text-sm border-stone-200">Antakshari</Button>
+        <Button variant="outline" className="rounded-full text-sm border-stone-200">Open Mic</Button>
+        <Button variant="outline" className="rounded-full text-sm border-stone-200">Workshops</Button>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* Active Rooms */}
+        {MOCK_ROOMS.map(room => (
+          <Card key={room.id} className="group cursor-pointer hover:ring-2 hover:ring-rose-900/20 transition-all">
+            <div onClick={() => handleJoinRoom(room)}>
+              <div className={`h-24 ${room.thumbnail} flex items-center justify-center relative`}>
+                <div className="absolute top-3 left-3 bg-red-600 text-white text-[10px] px-2 py-0.5 rounded-full font-bold flex items-center gap-1">
+                  <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></div> LIVE
+                </div>
+                <Music className="w-8 h-8 text-stone-400 opacity-50" />
+              </div>
+              <div className="p-4">
+                <h3 className="font-bold text-stone-900 line-clamp-1">{room.title}</h3>
+                <p className="text-xs text-stone-500 mb-3">Hosted by {room.host}</p>
+                
+                <div className="flex justify-between items-center text-xs text-stone-600 mb-4">
+                   <div className="flex items-center gap-1"><Mic className="w-3 h-3" /> {room.speakers} Speakers</div>
+                   <div className="flex items-center gap-1"><Users className="w-3 h-3" /> {room.audience} Listening</div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <div className="flex -space-x-2">
+                    <div className="w-6 h-6 rounded-full bg-stone-300 border-2 border-white"></div>
+                    <div className="w-6 h-6 rounded-full bg-stone-400 border-2 border-white"></div>
+                    <div className="w-6 h-6 rounded-full bg-stone-500 border-2 border-white text-[8px] text-white flex items-center justify-center">+{room.audience}</div>
+                  </div>
+                  <span className="text-xs text-rose-800 font-medium ml-auto">Join Room &rarr;</span>
+                </div>
+              </div>
+            </div>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+
+  const RoomView = () => (
+    <div className="fixed inset-0 top-16 bg-stone-900 text-stone-100 flex flex-col md:flex-row z-40">
+      {/* Main Stage Area */}
+      <div className="flex-1 flex flex-col p-4 relative">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-4 bg-stone-800/50 p-3 rounded-lg backdrop-blur-sm">
+          <div>
+            <h2 className="font-bold text-lg text-white">{activeRoomData?.title}</h2>
+            <div className="flex gap-2 text-xs text-stone-400">
+               <span className="text-emerald-400 flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-emerald-400"></span> Connected (24ms)</span>
+               <span>•</span>
+               <span>{activeRoomData?.host}</span>
+            </div>
+          </div>
+          <div className="flex gap-2">
+            {canModerate && (
+               <Button variant="ghost" className="text-red-400 hover:text-red-300 bg-red-900/20"><Shield className="w-4 h-4" /> Mod Tools</Button>
+            )}
+            <Button variant="danger" className="text-sm px-3" onClick={handleLeaveRoom}>
+              <LogOut className="w-4 h-4" /> Leave
+            </Button>
+          </div>
+        </div>
+
+        {/* Speakers Grid (Focus) */}
+        <div className="flex-1 grid grid-cols-2 md:grid-cols-3 gap-4 mb-4 overflow-y-auto">
+          {/* Host */}
+          <div className="bg-stone-800 rounded-xl relative border-2 border-rose-500 flex flex-col items-center justify-center p-4 min-h-[150px]">
+            <div className="w-20 h-20 rounded-full bg-stone-700 mb-2 overflow-hidden border-2 border-stone-600">
+              <img src="/api/placeholder/100/100" alt="Host" className="w-full h-full object-cover opacity-80" />
+            </div>
+            <div className="absolute top-2 right-2 bg-rose-600 text-[10px] px-2 rounded text-white font-bold">HOST</div>
+            <span className="font-medium text-sm">{activeRoomData?.host}</span>
+            <div className="mt-2 flex gap-2">
+               <div className="w-6 h-6 rounded-full bg-stone-700 flex items-center justify-center"><Mic className="w-3 h-3 text-green-400"/></div>
+            </div>
+          </div>
+
+          {/* Speakers */}
+          {[1, 2].map((i) => (
+            <div key={i} className="bg-stone-800 rounded-xl relative flex flex-col items-center justify-center p-4 min-h-[150px]">
+              <div className="w-20 h-20 rounded-full bg-stone-700 mb-2 overflow-hidden">
+                 <div className="w-full h-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-2xl font-bold">U{i}</div>
+              </div>
+              <span className="font-medium text-sm">Speaker {i}</span>
+              <div className="mt-2 flex gap-2">
+                 <div className="w-6 h-6 rounded-full bg-stone-700 flex items-center justify-center"><Mic className="w-3 h-3 text-white"/></div>
+              </div>
+            </div>
+          ))}
+
+          {/* Empty Slot */}
+          <div className="bg-stone-800/50 rounded-xl border border-dashed border-stone-700 flex flex-col items-center justify-center text-stone-500 min-h-[150px]">
+             <p className="text-xs">Empty Slot</p>
+          </div>
+        </div>
+
+        {/* Audience Area */}
+        <div className="bg-stone-800/30 rounded-lg p-3 h-32 overflow-y-auto">
+           <h3 className="text-xs font-bold text-stone-400 uppercase tracking-wider mb-2">Audience ({activeRoomData?.audience})</h3>
+           <div className="flex flex-wrap gap-2">
+              {Array.from({length: 12}).map((_, i) => (
+                <div key={i} className="flex flex-col items-center gap-1 w-12">
+                   <div className="w-8 h-8 rounded-full bg-stone-700"></div>
+                   <span className="text-[10px] text-stone-400 truncate w-full text-center">User {i}</span>
+                </div>
+              ))}
+           </div>
+        </div>
+
+        {/* Controls Bar */}
+        <div className="mt-4 flex justify-center gap-4">
+           <Button variant="secondary" className="rounded-full w-12 h-12 p-0 flex items-center justify-center bg-stone-700 text-stone-300 hover:bg-stone-600 border-none"><MicOff className="w-5 h-5" /></Button>
+           <Button variant="secondary" className="rounded-full w-12 h-12 p-0 flex items-center justify-center bg-stone-700 text-stone-300 hover:bg-stone-600 border-none"><Video className="w-5 h-5" /></Button>
+           <Button variant="secondary" className="rounded-full w-12 h-12 p-0 flex items-center justify-center bg-amber-700 text-white hover:bg-amber-600 border-none animate-bounce"><Hand className="w-5 h-5" /></Button>
+           <Button variant="secondary" className="rounded-full w-12 h-12 p-0 flex items-center justify-center bg-stone-700 text-stone-300 hover:bg-stone-600 border-none"><MessageCircle className="w-5 h-5" /></Button>
+        </div>
+      </div>
+
+      {/* Chat Sidebar (Hidden on mobile usually, but shown here for layout) */}
+      <div className="w-full md:w-80 bg-stone-800 border-l border-stone-700 flex flex-col hidden md:flex">
+        <div className="p-4 border-b border-stone-700 font-medium">Room Chat</div>
+        <div className="flex-1 p-4 space-y-4 overflow-y-auto">
+           <div className="flex gap-2">
+              <div className="w-6 h-6 rounded-full bg-blue-500 flex-shrink-0"></div>
+              <div>
+                 <p className="text-xs font-bold text-stone-400">Ahmed <span className="font-normal opacity-50">12:02</span></p>
+                 <p className="text-sm">Wah! Kya baat hai.</p>
+              </div>
+           </div>
+           <div className="flex gap-2">
+              <div className="w-6 h-6 rounded-full bg-green-500 flex-shrink-0"></div>
+              <div>
+                 <p className="text-xs font-bold text-stone-400">Sara <span className="font-normal opacity-50">12:03</span></p>
+                 <p className="text-sm">Please recite that couplet again.</p>
+              </div>
+           </div>
+           {/* System Msg */}
+           <div className="text-center text-xs text-stone-500 my-2">-- Ali joined the room --</div>
+        </div>
+        <div className="p-3 bg-stone-900 border-t border-stone-700">
+           <div className="relative">
+             <input type="text" placeholder="Send a message..." className="w-full bg-stone-800 border-none rounded-full py-2 px-4 text-sm text-white focus:ring-1 focus:ring-rose-500" />
+           </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const CreatorDashboard = () => (
+    <div className="max-w-5xl mx-auto px-4 py-8">
+      <h2 className="text-3xl font-serif font-bold text-stone-900 mb-6">Creator Studio</h2>
+      
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <Card className="p-6 bg-gradient-to-br from-rose-50 to-white border-rose-100">
+          <div className="w-10 h-10 bg-rose-100 rounded-lg flex items-center justify-center text-rose-800 mb-4">
+            <Mic className="w-6 h-6" />
+          </div>
+          <h3 className="font-bold text-lg mb-1">Schedule Live Room</h3>
+          <p className="text-sm text-stone-500 mb-4">Plan an event or start an instant room.</p>
+          <Button className="w-full text-sm">Create Room</Button>
+        </Card>
+
+        <Card className="p-6 bg-gradient-to-br from-amber-50 to-white border-amber-100">
+          <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center text-amber-800 mb-4">
+            <Feather className="w-6 h-6" />
+          </div>
+          <h3 className="font-bold text-lg mb-1">Publish Content</h3>
+          <p className="text-sm text-stone-500 mb-4">Submit Ghazal, Nazm, or Article for review.</p>
+          <Button variant="outline" className="w-full text-sm">Draft New</Button>
+        </Card>
+      </div>
+
+      <h3 className="font-bold text-xl text-stone-800 mb-4">Your Content Status</h3>
+      <Card className="overflow-hidden">
+        <table className="w-full text-left text-sm">
+          <thead className="bg-stone-50 text-stone-500">
+            <tr>
+              <th className="p-4 font-medium">Title</th>
+              <th className="p-4 font-medium">Type</th>
+              <th className="p-4 font-medium">Date</th>
+              <th className="p-4 font-medium">Status</th>
+              <th className="p-4 font-medium">Actions</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-stone-100">
+            <tr>
+              <td className="p-4 font-medium">Sunset in Delhi</td>
+              <td className="p-4">Short Story</td>
+              <td className="p-4 text-stone-500">Oct 24, 2024</td>
+              <td className="p-4"><Badge color="emerald">Published</Badge></td>
+              <td className="p-4"><MoreVertical className="w-4 h-4 text-stone-400 cursor-pointer" /></td>
+            </tr>
+            <tr>
+              <td className="p-4 font-medium">My First Ghazal</td>
+              <td className="p-4">Ghazal</td>
+              <td className="p-4 text-stone-500">Oct 26, 2024</td>
+              <td className="p-4"><Badge color="amber">Pending Review</Badge></td>
+              <td className="p-4"><MoreVertical className="w-4 h-4 text-stone-400 cursor-pointer" /></td>
+            </tr>
+          </tbody>
+        </table>
+      </Card>
+    </div>
+  );
+
+  const AdminView = () => (
+    <div className="max-w-5xl mx-auto px-4 py-8">
+       <div className="flex items-center gap-2 mb-6">
+         <Shield className="w-8 h-8 text-rose-900" />
+         <h2 className="text-3xl font-serif font-bold text-stone-900">Moderation Console</h2>
+       </div>
+
+       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div>
+            <h3 className="font-bold text-stone-800 mb-4">Content Review Queue</h3>
+            <div className="space-y-4">
+              <Card className="p-4 border-l-4 border-l-amber-400">
+                <div className="flex justify-between items-start mb-2">
+                   <h4 className="font-bold">Untitled Poem</h4>
+                   <span className="text-xs text-stone-500">User: poetic_soul</span>
+                </div>
+                <p className="text-sm text-stone-600 italic mb-3">"The night whispers secrets..."</p>
+                <div className="flex gap-2">
+                   <Button variant="primary" className="text-xs py-1 px-3">Approve</Button>
+                   <Button variant="outline" className="text-xs py-1 px-3">Reject</Button>
+                </div>
+              </Card>
+            </div>
+          </div>
+
+          <div>
+             <h3 className="font-bold text-stone-800 mb-4">Live Room Oversight</h3>
+             <Card className="p-4">
+                <p className="text-sm text-stone-500 mb-2">Active Rooms: 3</p>
+                <ul className="space-y-3">
+                   {MOCK_ROOMS.map(room => (
+                     <li key={room.id} className="flex justify-between items-center p-2 bg-stone-50 rounded">
+                        <span className="text-sm font-medium">{room.title}</span>
+                        <Button variant="danger" className="text-xs py-1 px-2 h-auto">Join to Mod</Button>
+                     </li>
+                   ))}
+                </ul>
+             </Card>
+          </div>
+       </div>
+    </div>
+  );
+
+  return (
+    <div className="min-h-screen bg-stone-50 font-sans text-stone-800">
+      {currentView !== 'room' && <Navbar />}
+      
+      <main>
+        {currentView === 'home' && <HomeView />}
+        {currentView === 'explore' && <ExploreView />}
+        {currentView === 'lobby' && <LobbyView />}
+        {currentView === 'room' && <RoomView />}
+        {currentView === 'dashboard' && <CreatorDashboard />}
+        {currentView === 'admin' && <AdminView />}
+      </main>
+
+      {currentView !== 'room' && (
+        <footer className="bg-white border-t border-stone-200 mt-12 py-8 px-4">
+          <div className="max-w-7xl mx-auto text-center">
+             <div className="flex justify-center items-center gap-2 mb-4">
+               <div className="w-6 h-6 bg-rose-900 rounded flex items-center justify-center text-white font-serif font-bold text-sm">S</div>
+               <span className="font-serif font-bold text-stone-900">Sher-o-Suroor</span>
+             </div>
+             <p className="text-stone-500 text-sm">© 2024 Sher-o-Suroor. Celebrating the Art of Poetry.</p>
+             <div className="flex justify-center gap-6 mt-4 text-sm text-stone-600">
+               <a href="#" className="hover:text-rose-900">Privacy</a>
+               <a href="#" className="hover:text-rose-900">Community Guidelines</a>
+               <a href="#" className="hover:text-rose-900">Contact</a>
+             </div>
+          </div>
+        </footer>
+      )}
+    </div>
+  );
+}
