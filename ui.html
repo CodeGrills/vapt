@@ -1,0 +1,631 @@
+import React, { useState, useEffect } from 'react';
+import { 
+  BookOpen, 
+  Mic, 
+  Search, 
+  User, 
+  Heart, 
+  MessageCircle, 
+  MoreVertical, 
+  Calendar, 
+  Video, 
+  LogOut,
+  Menu,
+  X,
+  Check,
+  Ban,
+  Upload,
+  Hand,
+  Users,
+  Play
+} from 'lucide-react';
+
+// --- Font Imports & Custom Styles ---
+const CustomStyles = () => (
+  <style>{`
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&family=Noto+Sans+Devanagari:wght@400;700&family=Playfair+Display:wght@400;700&family=Lato:wght@400;700&display=swap');
+    
+    .font-urdu { font-family: 'Noto Nastaliq Urdu', serif; line-height: 2.2; }
+    .font-hindi { font-family: 'Noto Sans Devanagari', sans-serif; }
+    .font-serif-header { font-family: 'Playfair Display', serif; }
+    
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #fdfbf7; }
+    ::-webkit-scrollbar-thumb { background: #d4b08c; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #a68b6c; }
+
+    /* Animations */
+    @keyframes fade-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .animate-fade-in { animation: fade-in 0.5s ease-out forwards; }
+  `}</style>
+);
+
+// --- Mock Data ---
+
+const MOCK_CONTENT = [
+  { id: 1, title: "Shikwa", titleUrdu: "شکوہ", author: "Allama Iqbal", type: "Poetry", lang: "Urdu", preview: "Kyun Ziyan Kar Banun, Sood Framosh Rahun...", previewUrdu: "کیوں زیاں کار بنوں، سود فراموش رہوں" },
+  { id: 2, title: "Madhushala", titleHindi: "मधुशाला", author: "Harivansh Rai Bachchan", type: "Poetry", lang: "Hindi", preview: "Madiralaya jane ko ghar se chalta hai peene wala...", previewHindi: "मदिरालय जाने को घर से चलता है पीनेवाला" },
+  { id: 3, title: "The Golden Bird", author: "Grimm Brothers", type: "Literature", lang: "English", preview: "A certain king had a beautiful garden..." },
+  { id: 4, title: "Ghazal", titleUrdu: "غزل", author: "Mirza Ghalib", type: "Poetry", lang: "Urdu", preview: "Dil-e-nadan tujhe hua kya hai...", previewUrdu: "دلِ ناداں تجھے ہوا کیا ہے" },
+];
+
+const MOCK_ROOMS = [
+  { id: 1, name: "Ghalib Appreciation Society", host: "Adab-e-Mehfil", listeners: 124, speakers: 3, lang: "Urdu", topic: "Deewan-e-Ghalib Discussion" },
+  { id: 2, name: "Late Night Sufi Jam", host: "RumiLover", listeners: 56, speakers: 5, lang: "Mixed", topic: "Qawwali & Sufism" },
+  { id: 3, name: "Hindi Kahaniyan", host: "Premchand Fans", listeners: 89, speakers: 2, lang: "Hindi", topic: "Storytelling Session" },
+];
+
+const MOCK_PENDING_CONTENT = [
+  { id: 101, title: "New Ghazal Submission", author: "Aspiring Poet", date: "2023-10-27" },
+  { id: 102, title: "Short Story: The Village", author: "StoryTeller99", date: "2023-10-28" },
+];
+
+// --- Components ---
+
+const Navbar = ({ setView, currentView, userRole, setUserRole }) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  return (
+    <nav className="bg-[#1a202c] text-[#fdfbf7] shadow-lg sticky top-0 z-50 border-b border-[#d4b08c]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between h-20 items-center">
+          {/* Logo Area */}
+          <div className="flex items-center cursor-pointer" onClick={() => setView('home')}>
+            <BookOpen className="h-8 w-8 text-[#d4b08c] mr-3" />
+            <div className="flex flex-col">
+              <span className="font-serif-header text-2xl font-bold tracking-wide">Sher-o-Suroor</span>
+              <span className="text-xs text-[#a0aec0] font-urdu text-right -mt-1">شعر و سرور</span>
+            </div>
+          </div>
+
+          {/* Desktop Menu */}
+          <div className="hidden md:flex space-x-8 items-center">
+            <NavBtn label="Khazana (Repository)" active={currentView === 'repository'} onClick={() => setView('repository')} />
+            <NavBtn label="Mehfil (Live Rooms)" active={currentView === 'rooms'} onClick={() => setView('rooms')} />
+            
+            {/* Role Switcher for Demo */}
+            <select 
+              className="bg-[#2d3748] text-sm border border-[#4a5568] rounded px-2 py-1 focus:outline-none"
+              value={userRole}
+              onChange={(e) => setUserRole(e.target.value)}
+            >
+              <option value="visitor">Visitor</option>
+              <option value="user">User</option>
+              <option value="creator">Creator</option>
+              <option value="moderator">Moderator</option>
+              <option value="admin">Admin</option>
+            </select>
+
+            <button 
+              onClick={() => setView('profile')}
+              className="flex items-center space-x-2 bg-[#d4b08c] text-[#1a202c] px-4 py-2 rounded-full hover:bg-[#eaddcf] transition-colors font-semibold shadow-md"
+            >
+              <User size={18} />
+              <span>My Dashboard</span>
+            </button>
+          </div>
+
+          {/* Mobile Menu Button */}
+          <div className="md:hidden">
+            <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-[#fdfbf7]">
+              {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Menu */}
+      {isMenuOpen && (
+        <div className="md:hidden bg-[#2d3748] border-b border-[#4a5568]">
+          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+            <MobileNavBtn label="Home" onClick={() => { setView('home'); setIsMenuOpen(false); }} />
+            <MobileNavBtn label="Khazana (Repository)" onClick={() => { setView('repository'); setIsMenuOpen(false); }} />
+            <MobileNavBtn label="Mehfil (Live Rooms)" onClick={() => { setView('rooms'); setIsMenuOpen(false); }} />
+            <MobileNavBtn label="My Dashboard" onClick={() => { setView('profile'); setIsMenuOpen(false); }} />
+          </div>
+        </div>
+      )}
+    </nav>
+  );
+};
+
+const NavBtn = ({ label, active, onClick }) => (
+  <button 
+    onClick={onClick}
+    className={`${active ? 'text-[#d4b08c] border-b-2 border-[#d4b08c]' : 'text-gray-300 hover:text-[#d4b08c]'} pb-1 transition-colors font-medium`}
+  >
+    {label}
+  </button>
+);
+
+const MobileNavBtn = ({ label, onClick }) => (
+  <button 
+    onClick={onClick}
+    className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-[#4a5568]"
+  >
+    {label}
+  </button>
+);
+
+// --- Views ---
+
+const HomeView = ({ setView }) => (
+  <div className="animate-fade-in">
+    {/* Hero Section */}
+    <div className="relative bg-[#2d3748] text-[#fdfbf7] py-20 px-4 overflow-hidden">
+      <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
+        {/* Abstract Pattern Overlay would go here */}
+        <div className="w-64 h-64 rounded-full bg-[#d4b08c] absolute -top-10 -right-10 blur-3xl"></div>
+        <div className="w-64 h-64 rounded-full bg-[#d4b08c] absolute top-20 -left-10 blur-3xl"></div>
+      </div>
+      
+      <div className="max-w-4xl mx-auto text-center relative z-10">
+        <h1 className="font-serif-header text-5xl md:text-6xl font-bold mb-6 text-[#d4b08c]">
+          Where Words Come Alive
+        </h1>
+        <p className="text-xl md:text-2xl mb-10 text-gray-300 font-light">
+          A sanctuary for Poetry, Literature, and Soulful Music. <br/>
+          Explore the archive or join a live Mehfil.
+        </p>
+        <div className="flex flex-col sm:flex-row justify-center gap-4">
+          <button 
+            onClick={() => setView('repository')}
+            className="px-8 py-3 bg-transparent border-2 border-[#d4b08c] text-[#d4b08c] rounded hover:bg-[#d4b08c] hover:text-[#1a202c] transition-all font-semibold flex items-center justify-center gap-2"
+          >
+            <BookOpen size={20} /> Explore Content
+          </button>
+          <button 
+            onClick={() => setView('rooms')}
+            className="px-8 py-3 bg-[#c0392b] text-white rounded hover:bg-[#a93226] transition-all font-semibold flex items-center justify-center gap-2 shadow-lg"
+          >
+            <Mic size={20} /> Join Live Mehfil
+          </button>
+        </div>
+      </div>
+    </div>
+
+    {/* Featured Categories */}
+    <div className="max-w-7xl mx-auto px-4 py-16">
+      <h2 className="font-serif-header text-3xl text-[#1a202c] mb-8 text-center border-b-2 border-[#d4b08c] inline-block pb-2 mx-auto block w-max">
+        Curated Collections
+      </h2>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <FeatureCard 
+          title="Classic Urdu Poetry" 
+          desc="Ghalib, Iqbal, Faiz, and the masters of Rekhta." 
+          urdu="اردو شاعری"
+          color="bg-[#2c3e50]"
+        />
+        <FeatureCard 
+          title="Hindi Literature" 
+          desc="Stories from Premchand to modern prose." 
+          hindi="हिंदी साहित्य"
+          color="bg-[#8e44ad]"
+        />
+        <FeatureCard 
+          title="Sufi & Folk Music" 
+          desc="Lyrics and recordings of timeless soulful melodies." 
+          urdu="صوفی سنگیت"
+          color="bg-[#d35400]"
+        />
+      </div>
+    </div>
+  </div>
+);
+
+const FeatureCard = ({ title, desc, urdu, hindi, color }) => (
+  <div className={`${color} text-white p-8 rounded-lg shadow-xl transform hover:-translate-y-1 transition-transform cursor-pointer relative overflow-hidden group`}>
+    <div className="absolute right-[-20px] bottom-[-20px] opacity-10 text-8xl font-serif-header group-hover:scale-110 transition-transform">
+      <BookOpen />
+    </div>
+    <h3 className="text-2xl font-bold mb-2">{title}</h3>
+    {(urdu || hindi) && (
+      <h4 className={`text-xl text-[#d4b08c] mb-4 ${urdu ? 'font-urdu' : 'font-hindi'}`}>
+        {urdu || hindi}
+      </h4>
+    )}
+    <p className="text-gray-200">{desc}</p>
+  </div>
+);
+
+const RepositoryView = () => {
+  const [filter, setFilter] = useState('All');
+
+  return (
+    <div className="max-w-7xl mx-auto px-4 py-8 animate-fade-in">
+      <div className="flex flex-col md:flex-row justify-between items-center mb-8">
+        <h2 className="text-3xl font-serif-header font-bold text-[#1a202c]">Khazana (Repository)</h2>
+        <div className="mt-4 md:mt-0 relative">
+          <input 
+            type="text" 
+            placeholder="Search poets, ghazals..." 
+            className="pl-10 pr-4 py-2 border-2 border-[#e2e8f0] rounded-full w-full md:w-80 focus:border-[#d4b08c] focus:outline-none"
+          />
+          <Search className="absolute left-3 top-2.5 text-gray-400" size={18} />
+        </div>
+      </div>
+
+      {/* Filters */}
+      <div className="flex gap-2 overflow-x-auto pb-4 mb-6">
+        {['All', 'Urdu Poetry', 'Hindi Lit', 'English', 'Religious'].map((cat) => (
+          <button 
+            key={cat}
+            onClick={() => setFilter(cat)}
+            className={`px-4 py-1.5 rounded-full whitespace-nowrap text-sm font-medium transition-colors ${
+              filter === cat 
+                ? 'bg-[#1a202c] text-[#d4b08c]' 
+                : 'bg-white border border-gray-300 text-gray-600 hover:bg-gray-50'
+            }`}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
+
+      {/* Content Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {MOCK_CONTENT.map((item) => (
+          <div key={item.id} className="bg-white border border-[#e2e8f0] rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
+            <div className="flex justify-between items-start mb-4">
+              <div>
+                <span className="text-xs font-bold tracking-wider text-[#d4b08c] uppercase">{item.type}</span>
+                <h3 className="text-xl font-bold text-[#2d3748] mt-1">{item.title}</h3>
+                {item.titleUrdu && <h3 className="text-lg text-[#4a5568] font-urdu text-right mt-1">{item.titleUrdu}</h3>}
+                {item.titleHindi && <h3 className="text-lg text-[#4a5568] font-hindi mt-1">{item.titleHindi}</h3>}
+              </div>
+              <button className="text-gray-400 hover:text-[#c0392b]"><Heart size={20} /></button>
+            </div>
+            
+            <p className="text-sm text-gray-500 mb-4">By <span className="font-semibold">{item.author}</span></p>
+            
+            <div className="bg-[#fdfbf7] p-4 rounded border-l-4 border-[#d4b08c] mb-4">
+              <p className="italic text-gray-700 font-serif mb-2">"{item.preview}"</p>
+              {item.previewUrdu && <p className="text-gray-700 font-urdu text-right text-lg">{item.previewUrdu}</p>}
+              {item.previewHindi && <p className="text-gray-700 font-hindi">{item.previewHindi}</p>}
+            </div>
+
+            <div className="flex justify-between items-center border-t pt-4 border-gray-100">
+              <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">{item.lang}</span>
+              <button className="text-[#1a202c] text-sm font-semibold hover:text-[#d4b08c]">Read Full &rarr;</button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const RoomsLobbyView = ({ onJoinRoom }) => (
+  <div className="max-w-7xl mx-auto px-4 py-8 animate-fade-in">
+    <div className="text-center mb-10">
+      <h2 className="text-3xl font-serif-header font-bold text-[#1a202c]">Live Mehfils</h2>
+      <p className="text-gray-600 mt-2">Join a room to listen, perform, or discuss.</p>
+    </div>
+
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* Create Room Card */}
+      <div className="bg-[#fdfbf7] border-2 border-dashed border-[#cbd5e0] rounded-xl p-8 flex flex-col items-center justify-center text-center hover:border-[#d4b08c] transition-colors cursor-pointer group">
+        <div className="w-16 h-16 bg-[#edf2f7] rounded-full flex items-center justify-center mb-4 group-hover:bg-[#d4b08c] transition-colors">
+          <Calendar className="text-gray-500 group-hover:text-white" size={32} />
+        </div>
+        <h3 className="font-bold text-lg text-gray-700">Schedule a Room</h3>
+        <p className="text-sm text-gray-500 mt-2">Host your own poetry slam or discussion.</p>
+      </div>
+
+      {/* Active Room Cards */}
+      {MOCK_ROOMS.map((room) => (
+        <div key={room.id} className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow border border-gray-100">
+          <div className="bg-[#1a202c] px-6 py-4 flex justify-between items-center">
+            <span className="bg-[#e53e3e] text-white text-xs font-bold px-2 py-1 rounded animate-pulse">LIVE</span>
+            <span className="text-gray-300 text-xs flex items-center gap-1"><Users size={12}/> {room.listeners} listening</span>
+          </div>
+          <div className="p-6">
+            <h3 className="text-xl font-bold text-[#2d3748] mb-1">{room.name}</h3>
+            <p className="text-sm text-[#d4b08c] font-semibold mb-4">{room.topic}</p>
+            
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center font-bold text-gray-600">
+                {room.host[0]}
+              </div>
+              <div>
+                <p className="text-sm font-bold text-gray-800">{room.host}</p>
+                <p className="text-xs text-gray-500">Host</p>
+              </div>
+            </div>
+
+            <div className="flex justify-between items-center">
+              <div className="flex -space-x-2">
+                {[1,2,3].map(i => (
+                  <div key={i} className="w-8 h-8 rounded-full bg-gray-300 border-2 border-white"></div>
+                ))}
+                <div className="w-8 h-8 rounded-full bg-gray-100 border-2 border-white flex items-center justify-center text-xs text-gray-500">+{room.listeners}</div>
+              </div>
+              <button 
+                onClick={() => onJoinRoom(room)}
+                className="bg-[#2d3748] text-white px-6 py-2 rounded-full hover:bg-[#d4b08c] hover:text-[#1a202c] transition-colors font-semibold"
+              >
+                Join
+              </button>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+const ActiveRoomView = ({ room, onLeave }) => {
+  const [chatOpen, setChatOpen] = useState(true);
+  const [isMuted, setIsMuted] = useState(true);
+
+  return (
+    <div className="flex h-[calc(100vh-80px)] bg-[#1a202c] animate-fade-in overflow-hidden">
+      {/* Main Stage Area */}
+      <div className="flex-1 flex flex-col relative">
+        <div className="p-4 bg-[#2d3748] shadow-md flex justify-between items-center z-10">
+          <div>
+            <h2 className="text-white font-bold text-lg">{room.name}</h2>
+            <span className="text-[#d4b08c] text-sm">{room.topic}</span>
+          </div>
+          <div className="flex gap-4">
+            <button className="text-red-400 hover:text-red-300 flex items-center gap-2 bg-red-900/30 px-4 py-2 rounded" onClick={onLeave}>
+              <LogOut size={18} /> Leave Room
+            </button>
+          </div>
+        </div>
+
+        {/* Speakers Grid */}
+        <div className="flex-1 p-6 overflow-y-auto">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {/* Host */}
+            <div className="aspect-video bg-[#4a5568] rounded-lg relative border-2 border-[#d4b08c] flex items-center justify-center">
+              <div className="text-center">
+                <div className="w-20 h-20 bg-gray-600 rounded-full mx-auto mb-2 flex items-center justify-center text-2xl text-white font-bold">{room.host[0]}</div>
+                <p className="text-white font-semibold">{room.host} (Host)</p>
+              </div>
+              <div className="absolute top-2 right-2 bg-[#d4b08c] p-1 rounded-full"><Mic size={14} className="text-[#1a202c]" /></div>
+            </div>
+            
+            {/* Other Speakers */}
+            {[1, 2].map(i => (
+              <div key={i} className="aspect-video bg-[#2d3748] rounded-lg relative flex items-center justify-center">
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-gray-600 rounded-full mx-auto mb-2"></div>
+                  <p className="text-gray-300">Speaker {i}</p>
+                </div>
+                <div className="absolute bottom-2 right-2">
+                  <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Audience Section */}
+          <div className="mt-8">
+            <h3 className="text-gray-400 uppercase text-xs font-bold tracking-wider mb-4">Audience ({room.listeners})</h3>
+            <div className="flex flex-wrap gap-3">
+              {[...Array(12)].map((_, i) => (
+                <div key={i} className="w-10 h-10 rounded-full bg-[#4a5568] hover:bg-[#d4b08c] transition-colors cursor-pointer" title={`User ${i}`}></div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom Controls */}
+        <div className="bg-[#2d3748] p-4 flex justify-center gap-4">
+          <button 
+            onClick={() => setIsMuted(!isMuted)}
+            className={`p-4 rounded-full ${isMuted ? 'bg-red-500 hover:bg-red-600' : 'bg-gray-600 hover:bg-gray-500'} text-white transition-colors`}
+          >
+            <Mic size={24} />
+          </button>
+          <button className="p-4 rounded-full bg-gray-600 hover:bg-gray-500 text-white transition-colors">
+            <Video size={24} />
+          </button>
+          <button className="p-4 rounded-full bg-[#d4b08c] hover:bg-[#c5a078] text-[#1a202c] transition-colors flex gap-2 px-6 items-center font-bold">
+            <Hand size={24} /> Raise Hand
+          </button>
+          <button 
+            onClick={() => setChatOpen(!chatOpen)}
+            className="p-4 rounded-full bg-gray-600 hover:bg-gray-500 text-white transition-colors lg:hidden"
+          >
+            <MessageCircle size={24} />
+          </button>
+        </div>
+      </div>
+
+      {/* Chat Sidebar (Collapsible on mobile) */}
+      <div className={`${chatOpen ? 'w-80' : 'w-0'} bg-white border-l border-gray-200 transition-all duration-300 flex flex-col hidden lg:flex`}>
+        <div className="p-4 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
+          <h3 className="font-bold text-gray-700">Live Chat</h3>
+          <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">Online</span>
+        </div>
+        <div className="flex-1 p-4 overflow-y-auto space-y-4">
+          <div className="text-sm">
+            <span className="font-bold text-[#d4b08c]">FaizFan:</span> Waah waah! Kya baat hai.
+          </div>
+          <div className="text-sm">
+            <span className="font-bold text-blue-600">Moderator:</span> Please keep mics muted while the poet is reciting.
+          </div>
+          <div className="text-sm">
+             <span className="font-bold text-purple-600">NewUser:</span> Is this Ghazal by Ghalib?
+          </div>
+        </div>
+        <div className="p-4 border-t border-gray-200">
+          <input 
+            type="text" 
+            placeholder="Type a message..." 
+            className="w-full border rounded-full px-4 py-2 text-sm focus:outline-none focus:border-[#d4b08c]"
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const DashboardView = ({ role }) => {
+  const [activeTab, setActiveTab] = useState('profile');
+
+  return (
+    <div className="max-w-7xl mx-auto px-4 py-8 animate-fade-in">
+      <h2 className="text-3xl font-serif-header font-bold text-[#1a202c] mb-6">
+        {role === 'admin' ? 'Admin Control Center' : 
+         role === 'moderator' ? 'Moderator Desk' : 
+         role === 'creator' ? 'Creator Studio' : 'My Profile'}
+      </h2>
+
+      <div className="flex flex-col md:flex-row gap-8">
+        {/* Sidebar Tabs */}
+        <div className="w-full md:w-64 space-y-2">
+          <DashboardTab label="Profile Info" icon={<User size={18} />} active={activeTab === 'profile'} onClick={() => setActiveTab('profile')} />
+          <DashboardTab label="Saved Content" icon={<Heart size={18} />} active={activeTab === 'saved'} onClick={() => setActiveTab('saved')} />
+          
+          {(role === 'creator' || role === 'moderator' || role === 'admin') && (
+            <>
+              <div className="border-t border-gray-200 my-2 pt-2"></div>
+              <p className="px-4 text-xs font-bold text-gray-400 uppercase mb-2">Creator Tools</p>
+              <DashboardTab label="My Uploads" icon={<Upload size={18} />} active={activeTab === 'uploads'} onClick={() => setActiveTab('uploads')} />
+              <DashboardTab label="Schedule Room" icon={<Calendar size={18} />} active={activeTab === 'schedule'} onClick={() => setActiveTab('schedule')} />
+            </>
+          )}
+
+          {(role === 'moderator' || role === 'admin') && (
+            <>
+              <div className="border-t border-gray-200 my-2 pt-2"></div>
+              <p className="px-4 text-xs font-bold text-gray-400 uppercase mb-2">Moderation</p>
+              <DashboardTab label="Content Queue" icon={<Check size={18} />} active={activeTab === 'queue'} onClick={() => setActiveTab('queue')} alert />
+              <DashboardTab label="User Reports" icon={<Ban size={18} />} active={activeTab === 'reports'} onClick={() => setActiveTab('reports')} />
+            </>
+          )}
+        </div>
+
+        {/* Content Area */}
+        <div className="flex-1 bg-white rounded-lg shadow-sm border border-gray-200 p-8 min-h-[500px]">
+          {activeTab === 'profile' && (
+            <div>
+              <div className="flex items-center gap-6 mb-8">
+                <div className="w-24 h-24 bg-[#d4b08c] rounded-full flex items-center justify-center text-3xl font-bold text-white">U</div>
+                <div>
+                  <h3 className="text-2xl font-bold">User Name</h3>
+                  <span className="bg-[#2d3748] text-white px-2 py-1 rounded text-xs uppercase tracking-wider">{role}</span>
+                  <p className="text-gray-500 mt-2">Member since Oct 2023</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="p-4 bg-gray-50 rounded border">
+                  <h4 className="font-bold text-gray-700 mb-2">Bio</h4>
+                  <p className="text-sm text-gray-600">Lover of classic Urdu poetry and modern Hindi literature. Aspiring writer.</p>
+                </div>
+                <div className="p-4 bg-gray-50 rounded border">
+                  <h4 className="font-bold text-gray-700 mb-2">Stats</h4>
+                  <div className="flex justify-between text-sm">
+                    <span>Rooms Hosted: 0</span>
+                    <span>Content Posted: 5</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'queue' && (
+            <div>
+               <h3 className="text-xl font-bold mb-4 flex items-center gap-2"><Check className="text-green-600"/> Content Approval Queue</h3>
+               <div className="space-y-4">
+                 {MOCK_PENDING_CONTENT.map(item => (
+                   <div key={item.id} className="border p-4 rounded-lg flex justify-between items-center bg-gray-50">
+                     <div>
+                       <h4 className="font-bold text-[#2d3748]">{item.title}</h4>
+                       <p className="text-sm text-gray-500">By {item.author} • {item.date}</p>
+                     </div>
+                     <div className="flex gap-2">
+                       <button className="px-3 py-1 bg-green-500 text-white text-sm rounded hover:bg-green-600">Approve</button>
+                       <button className="px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600">Reject</button>
+                       <button className="px-3 py-1 bg-gray-500 text-white text-sm rounded hover:bg-gray-600">View</button>
+                     </div>
+                   </div>
+                 ))}
+               </div>
+            </div>
+          )}
+
+          {activeTab !== 'profile' && activeTab !== 'queue' && (
+             <div className="flex flex-col items-center justify-center h-full text-gray-400">
+               <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                 <MoreVertical />
+               </div>
+               <p>This section is under development for the demo.</p>
+             </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const DashboardTab = ({ label, icon, active, onClick, alert }) => (
+  <button 
+    onClick={onClick}
+    className={`w-full flex items-center justify-between px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
+      active ? 'bg-[#fdfbf7] text-[#d4b08c] border border-[#d4b08c]' : 'text-gray-600 hover:bg-gray-50'
+    }`}
+  >
+    <div className="flex items-center gap-3">
+      {icon}
+      {label}
+    </div>
+    {alert && <span className="w-2 h-2 rounded-full bg-red-500"></span>}
+  </button>
+);
+
+// --- Main App ---
+
+export default function App() {
+  const [currentView, setCurrentView] = useState('home');
+  const [activeRoom, setActiveRoom] = useState(null);
+  const [userRole, setUserRole] = useState('admin'); // Default role for demo
+
+  const handleJoinRoom = (room) => {
+    setActiveRoom(room);
+    setCurrentView('activeRoom');
+  };
+
+  const handleLeaveRoom = () => {
+    setActiveRoom(null);
+    setCurrentView('rooms');
+  };
+
+  return (
+    <div className="min-h-screen bg-white font-sans text-gray-900">
+      <CustomStyles />
+      
+      {currentView !== 'activeRoom' && (
+        <Navbar 
+          setView={setCurrentView} 
+          currentView={currentView} 
+          userRole={userRole}
+          setUserRole={setUserRole}
+        />
+      )}
+
+      <main>
+        {currentView === 'home' && <HomeView setView={setCurrentView} />}
+        {currentView === 'repository' && <RepositoryView />}
+        {currentView === 'rooms' && <RoomsLobbyView onJoinRoom={handleJoinRoom} />}
+        {currentView === 'activeRoom' && activeRoom && <ActiveRoomView room={activeRoom} onLeave={handleLeaveRoom} />}
+        {currentView === 'profile' && <DashboardView role={userRole} />}
+      </main>
+
+      {currentView !== 'activeRoom' && (
+        <footer className="bg-[#1a202c] text-gray-400 py-8 text-center border-t border-[#2d3748]">
+          <div className="flex justify-center items-center gap-2 mb-4">
+            <BookOpen className="text-[#d4b08c]" size={20} />
+            <span className="font-serif-header text-xl text-white">Sher-o-Suroor</span>
+          </div>
+          <p className="text-sm">© 2023 Sher-o-Suroor Platform. All rights reserved.</p>
+          <p className="text-xs mt-2">Connecting hearts through Poetry & Verse.</p>
+        </footer>
+      )}
+    </div>
+  );
+}
